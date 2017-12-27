@@ -1,0 +1,541 @@
+* {
+    font-family: "Lato", sans-serif;
+}
+
+html, body {
+    height: 100%;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    background: #f5f8fa;
+    text-rendering: optimizeLegibility !important;
+    -webkit-font-smoothing: antialiased !important;
+}
+
+aside, .center-content {
+    padding: 2.5rem 1rem;
+}
+
+.left-content>.card {
+    margin-bottom: 1rem;
+}
+
+div.app-content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+h1, h2, h3, h4 {
+    letter-spacing: 0.025rem;
+    font-weight: 500;
+    color: #636b6f;
+    margin: 0.5rem 0 0.5rem 0;
+}
+
+.uppercase {
+    text-transform: uppercase;
+}
+
+p {
+    margin-bottom: 0.5rem;
+}
+
+p, li, timer > span.ng-binding.ng-scope {
+    color: #636b6f;
+}
+
+a {
+    outline: none;
+}
+
+h1 {
+    font-size: 2rem;
+}
+
+h2 {
+    font-size: 1.85rem;
+}
+
+h3 {
+    font-size: 1.7rem;
+}
+
+h4 {
+    font-size: 1.55rem;
+}
+
+.content-container>p {
+    font-size: 1.3rem;
+}
+
+.content-container {
+    flex-direction: column;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.btn {
+    border-radius: 0;
+    text-transform: uppercase;
+    padding: 8px 10px;
+    transition: all 0.4s ease;
+}
+
+.btn {
+    outline: none !important;
+}
+
+.btn-link.logout {
+    line-height: 50px;
+    padding: 0;
+    color: white;
+    border: none;
+    width: 100%;
+    transition: 0.4s all ease;
+    text-decoration: none;
+}
+
+.btn-link.logout:hover {
+    background: #3a5066;
+}
+
+.btn.rounded {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-bottom: 1rem;
+    background: #2c3e50;
+    border: 1px solid #2c3e50;
+}
+
+.btn.rounded:hover {
+    background: #3a5066;
+    border: 1px solid #3a5066;
+}
+
+.btn-backspace {
+    position: absolute;
+    padding: 0;
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    right: 5px;
+    padding-right: 2px;
+    bottom: 10px;
+    background: #337ab7;
+    color: white;
+}
+
+.btn-backspace:hover {
+    color: white;
+}
+
+.transition {
+    transition: all 0.4s ease;
+}
+
+input.form-control {
+    height: 50px;
+}
+
+select.form-control {
+    border-radius: 0;
+}
+
+select:not([multiple]) {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-position: right 50%;
+    background-repeat: no-repeat;
+    background-image: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAA4AAAAMCAYAAABSgIzaAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJbWFnZVJlYWR5ccllPAAAAyJpVFh0WE1MOmNvbS5hZG9iZS54bXAAAAAAADw/eHBhY2tldCBiZWdpbj0i77u/IiBpZD0iVzVNME1wQ2VoaUh6cmVTek5UY3prYzlkIj8+IDx4OnhtcG1ldGEgeG1sbnM6eD0iYWRvYmU6bnM6bWV0YS8iIHg6eG1wdGs9IkFkb2JlIFhNUCBDb3JlIDUuMC1jMDYwIDYxLjEzNDc3NywgMjAxMC8wMi8xMi0xNzozMjowMCAgICAgICAgIj4gPHJkZjpSREYgeG1sbnM6cmRmPSJodHRwOi8vd3d3LnczLm9yZy8xOTk5LzAyLzIyLXJkZi1zeW50YXgtbnMjIj4gPHJkZjpEZXNjcmlwdGlvbiByZGY6YWJvdXQ9IiIgeG1sbnM6eG1wPSJodHRwOi8vbnMuYWRvYmUuY29tL3hhcC8xLjAvIiB4bWxuczp4bXBNTT0iaHR0cDovL25zLmFkb2JlLmNvbS94YXAvMS4wL21tLyIgeG1sbnM6c3RSZWY9Imh0dHA6Ly9ucy5hZG9iZS5jb20veGFwLzEuMC9zVHlwZS9SZXNvdXJjZVJlZiMiIHhtcDpDcmVhdG9yVG9vbD0iQWRvYmUgUGhvdG9zaG9wIENTNSBNYWNpbnRvc2giIHhtcE1NOkluc3RhbmNlSUQ9InhtcC5paWQ6NDZFNDEwNjlGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiIHhtcE1NOkRvY3VtZW50SUQ9InhtcC5kaWQ6NDZFNDEwNkFGNzFEMTFFMkJEQ0VDRTM1N0RCMzMyMkIiPiA8eG1wTU06RGVyaXZlZEZyb20gc3RSZWY6aW5zdGFuY2VJRD0ieG1wLmlpZDo0NkU0MTA2N0Y3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIgc3RSZWY6ZG9jdW1lbnRJRD0ieG1wLmRpZDo0NkU0MTA2OEY3MUQxMUUyQkRDRUNFMzU3REIzMzIyQiIvPiA8L3JkZjpEZXNjcmlwdGlvbj4gPC9yZGY6UkRGPiA8L3g6eG1wbWV0YT4gPD94cGFja2V0IGVuZD0iciI/PuGsgwQAAAA5SURBVHjaYvz//z8DOYCJgUxAf42MQIzTk0D/M+KzkRGPoQSdykiKJrBGpOhgJFYTWNEIiEeAAAMAzNENEOH+do8AAAAASUVORK5CYII=);
+    padding: .5em;
+    padding-right: 1.5em
+}
+
+.form-control.has-error {
+    border-color: #a94442;
+    outline: 0;
+    -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px #a94442);
+    box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 8px #a94442);
+}
+
+.form-control, .input-group-addon {
+    border-radius: 0;
+}
+
+div.input-group, div.form-group {
+    margin: 1rem 0;
+}
+
+.navbar {
+    border: 0;
+}
+
+.navbar-content {
+    width: 100px;
+}
+
+.navbar-title-text {
+    color: white;
+    margin: 0;
+    line-height: 50px;
+    padding: 0 1rem;
+    font-weight: 300;
+    text-transform: uppercase;
+    font-size: 1.7rem;
+}
+
+.navbar-title {
+    width: 200px;
+    text-align: center;
+}
+
+.navbar-custom {
+    border-radius: 0;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+    max-height: 50px;
+    height: 50px;
+    background: #2c3e50;
+    display: -webkit-box !important;
+    display: -ms-flexbox !important;
+    display: flex !important;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+    -ms-flex-flow: row;
+    flex-flow: row;
+    position: relative;
+    width: 100%;
+}
+
+.ng-hide.ng-hide-animate {
+    display: none !important;
+}
+
+.flex {
+    display: flex;
+}
+
+.flex-fill {
+    display: flex;
+    flex: 1;
+}
+
+.fcol {
+    flex-direction: column;
+}
+
+.frow {
+    flex-direction: row;
+}
+
+.flex-1 {
+    flex: 1;
+}
+
+.flex-2 {
+    flex: 2;
+}
+
+.fcenter {
+    align-items: center;
+    justify-content: center;
+}
+
+.ui {
+    background-color: white;
+    z-index: 10;
+}
+
+.fixed-width {
+    width: auto;
+    margin: auto;
+}
+
+.card {
+    position: relative;
+    border-top: 3px solid #617487;
+    border-bottom: 3px solid #617487;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 2px 3px rgba(0, 0, 0, .2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    padding: 0.5rem;
+}
+
+.card-header {
+    padding: 0.75rem;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.card-content {
+    padding: 0.75rem;
+}
+
+.card-footer {
+    padding: 0.75rem;
+    border-top: 1px solid #f4f4f4;
+    text-align: center;
+}
+
+.card.small {
+    width: 240px;
+    height: 360px;
+}
+
+.card.med {
+    width: 300px;
+    height: 430px;
+}
+
+.card.lg {
+    width: 340px;
+    height: 460px;
+}
+
+.panel {
+    position: relative;
+    box-shadow: 0 0 0 1px rgba(0, 0, 0, .1), 0 2px 3px rgba(0, 0, 0, .2);
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    border-radius: 0;
+    border: none;
+}
+
+.panel-header {
+    padding: 1rem;
+    border-bottom: 1px solid #f4f4f4;
+}
+
+.panel-content {
+    padding: 1rem;
+}
+
+.with-border {
+    border-bottom: 3px solid #DDDDDD;
+    padding-bottom: 1rem;
+}
+
+.panel-footer {
+    padding: 1rem;
+    border-top: 1px solid #f4f4f4;
+    text-align: center;
+}
+
+.panel.small {
+    width: 260px;
+    height: 380px;
+}
+
+.panel.med {
+    width: 647px;
+    height: 430px;
+}
+
+.panel.lg {
+    width: 560px;
+    height: 480px;
+}
+
+.user-information {
+    padding-left: 1rem;
+}
+
+.sidemenu {
+    padding: 0.65rem;
+    background: #2c3e50;
+}
+
+.callhistory-group {
+    height: 366px;
+    overflow-y: scroll;
+    overflow-x: hidden;
+}
+
+.card.popup {
+    width: 300px;
+    height: 240px;
+}
+
+.card.callinfo {
+    position: absolute;
+    right: 20px;
+}
+
+.card.callprompt {
+    position: absolute;
+    left: 20px;
+    height: 200px;
+}
+
+.callhistory-group>div {
+    display: flex;
+    flex-direction: row;
+}
+
+.callhistory-group>div>p {
+    flex: 1;
+    text-align: center;
+}
+
+.settings-group {
+    padding: 6px;
+}
+
+.settings-item {
+    margin-bottom: 12px;
+}
+
+.btn-dialpad {
+    height: 55px;
+    width: 55px;
+    border-radius: 50%;
+    background: white;
+    color: #3a5066;
+    border: 2px solid transparent;
+}
+
+.btn-dialpad:hover {
+    border: 2px solid #3a5066;
+    background: white;
+    color: #3a5066;
+}
+
+.dialpad-group {
+    padding: 4px;
+    display: flex;
+    width: 80%;
+    justify-content: space-around;
+}
+
+.btn-dialpad>span {
+    display: block;
+    font-size: 1.1rem;
+    color: #777 !important;
+}
+
+.btn.callaction {
+    height: 40px;
+    width: 40px;
+}
+
+.btn.hangup {
+    height: 40px;
+}
+
+.btn-link.callhistory {
+    padding: 0;
+}
+
+.button-group {
+    margin-top: 10px;
+    position: relative;
+}
+
+.dialpad-input-group {
+    position: relative;
+}
+
+select.dialpad-input {
+    width: 25% !important;
+}
+
+input.dialpad-input {
+    width: 74% !important;
+}
+
+.dialpad-input {
+    display: inline-block;
+    vertical-align: top;
+    height: 50px;
+}
+.m360logo{
+    width: 261px;height: 81px;
+}
+.appText{
+     width: 280px;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+      display: inline-block;
+}
+
+.details{
+    margin-top: 1.4%;
+}
+
+.onclick-menu {
+    position: relative;
+    display: inline-block;
+}
+.onclick-menu:before {
+    content: "\f0c9";
+    font-family: FontAwesome;
+    font-style: normal;
+    font-weight: normal;
+    color: #000;
+    font-size: 18px;
+}
+.onclick-menu:focus .onclick-menu-content {
+    display: block;
+}
+.onclick-menu-content {
+    position: absolute;
+    z-index: 10000;
+    display: none;
+    background-color: #ccc;
+}
+
+
+.popover__title {
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-size: 24px;
+  text-decoration: none;
+  color: #2C3E50;
+  text-align: center;
+}
+
+.popover__wrapper {
+    position: relative;
+    display: inline-block;
+    margin-top : -1%;
+    padding-right: 10px;
+}
+.popover__content {
+    opacity: 0;
+    visibility: hidden;
+    position: absolute;
+    transform: translate(0,0px);
+    background-color: #BFBFBF;
+    padding: 1.5rem;
+    box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.26);
+    width: auto;
+}
+.popover__content:before {
+    position: absolute;
+    z-index: -1;
+    content: '';
+    top: -8px;
+    border-style: solid;
+    border-width: 0 10px 10px 10px;
+    border-color: transparent transparent #BFBFBF transparent;
+    transition-duration: 0.3s;
+    transition-property: transform;
+}
+.popover__wrapper:hover .popover__content {
+    z-index: 10;
+    opacity: 1;
+    visibility: visible;
+    transform: translate(0,-5px);
+    transition: all 0.5s cubic-bezier(0.75, -0.02, 0.2, 0.97);
+}
+.popover__message {
+  text-align: center;
+}
+
+.call-details{
+    margin-right: 1.2%;
+}
+.text_center_alignemnt{
+    padding-left: 21px;
+}

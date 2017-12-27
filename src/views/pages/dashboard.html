@@ -1,0 +1,201 @@
+<nav class="navbar navbar-custom">
+    <div class="navbar-title">
+        <span class="navbar-title-text"><b>WebRTC</b> Client</span>
+    </div>
+    <div class="flex-fill">
+    </div>
+    <div class="navbar-content">
+        <button class="btn btn-link logout" ng-click="logout()">End Session</button>
+    </div>
+</nav>
+
+<div class="page-wrapper flex frow flex-1 fixed-width">
+<audio id="inboundring"></audio> 
+    <aside class='left-content'>
+        <div class='card small flex fcol ui'>
+            <div class="card-header flex frow">
+                <div class="avatar-container">
+                    <ng-letter-avatar data="{{storage.data.firstName}} {{storage.data.lastName}}" avatarcustombgcolor="rgb(44, 62, 80)" charCount="2" shape="round" fontWeight="300" fontSize="1.85rem"></ng-letter-avatar>
+                </div>
+                <div class="user-information flex-1">
+                    <h4>{{ storage.data.firstName }} {{ storage.data.lastName }}</h4>
+                    <p class="text-muted">@ {{ storage.data.webrtcDomain }}</p>
+                </div>
+            </div>
+            <div class="card-content flex fcol flex-1" ng-cloak>
+                <div class="content-container">
+                    <p><i class="fa fa-id-card"></i> Caller ID Number</p>
+                    <select class="form-control" ng-model="storage.data.callerIdNumber" ng-change="changeFromNumber()">
+                        <option ng-repeat="item in webrtcOverrideNumbers track by $index">{{item}}</option>
+                    </select>
+                </div>
+
+                <div class="content-container">
+                    <p><i class="fa fa-money"></i> Account Balance</p>
+                    <p class="with-border" ng-bind="storage.data.currentBalance">$45.34</p>
+                </div>
+                <div class="content-container">
+                    <p><i class="fa fa-list"></i> Calls Made Today</p>
+                    <p class="with-border" ng-bind="storage.data.numOfCalls"></p>
+                </div>
+            </div>
+            <div class="card-footer">
+                <p class="text-muted"><small>Log in to the <a href="https://portal.message360.com">API portal</a> for more account information.</small></p>
+            </div>
+        </div>
+    </aside>
+
+    <div class='center-content flex col' ng-controller="dialpadController">
+        <div class="card med flex fcol ui">
+            <div class="card-header">
+                <div class="dialpad-input-group">
+                    <select class="form-control dialpad-input" name="countryCodeValue" ng-model="dialpad.countryCode">
+                        <option value="US">US</option>
+                    </select>
+                    <button type="button" class="btn btn-backspace" ng-click="backspace()"><i class="fa fa-chevron-left"></i></button>
+                    <input type="text" name="dialpadNumber" id="dialpadNumber" class="form-control dialpad-input" ng-model="dialpad.number" placeholder="Enter number to dial">
+                </div>
+            </div>
+            <div class="card-content flex fcenter fcol flex-1" ng-cloak>
+                <div class="dialpad-group">
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(1)">1<span class="dialer-text">./@</span></button>
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(2)">2<span class="dialer-text">ABC</span></button>
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(3)">3<span class="dialer-text">DEF</span></button>
+                </div>
+                <div class="dialpad-group">
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(4)">4<span class="dialer-text">GHI</span></button>
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(5)">5<span class="dialer-text">JKL</span></button>
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(6)">6<span class="dialer-text">MNO</span></button>
+                </div>
+                <div class="dialpad-group">
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(7)">7<span class="dialer-text">PQRS</span></button>
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(8)">8<span class="dialer-text">TUV</span></button>
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(9)">9<span class="dialer-text">WXYZ</span></button>
+                </div>
+                <div class="dialpad-group">
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf('*')">*<span class="dialer-text">---</span></button>
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf(0)">0<span class="dialer-text">+</span></button>
+                    <button type="button" class="btn btn-dialpad" ng-click="dtmf('#')">#<span class="dialer-text">---</span></button>
+                </div>
+            </div>
+            <div class="card-footer">
+                <button type="button" class="btn btn-primary btn-block" ng-click="call(dialpad.number)">Call</button>
+            </div>
+        </div>
+       
+    </div>
+
+    <aside class='right-content' >
+         <div class='panel med flex frow' ng-controller="dashboardPanelController">
+            <div class="sidemenu flex fcol">
+                <button type='button' ng-click="panelContent.changeContent('callHistory')" class="btn btn-primary rounded" tooltips tooltip-template="Call History" tooltip-side="left" tooltip-speed="fast"><i class="fa fa-history"></i></button>
+                <button type='button' ng-click="panelContent.changeContent('settings')" class="btn btn-primary rounded" tooltips tooltip-template="Settings" tooltip-side="left" tooltip-speed="fast"><i class="fa fa-cog"></i></button>
+            </div>
+            <div class="panel-content flex-1 fcol" ng-show="panelContent.selected == 'callHistory'">
+                <h1 class="panel-content-header with-border">Call History</h1>
+                <div class="callhistory-group">
+                    <div class="callhistory-labels">
+                        <span class="call-details"></span>
+                        <p class="text_center_alignemnt">Called Number</p>
+                        <p>Call Type</p>
+                        <p>Date</p>
+                        <p>Time</p>
+                        <p>Actions</p>
+                    </div>
+                    <div class="callhistory-data" ng-repeat="call in callHistory">
+                        
+                        <span class="popover__wrapper">
+                          <a>
+                            <h2 class="popover__title"><i class="fa fa-bars"></i></h2>
+                          </a>
+                          <span class="push popover__content">
+                            <p class="popover__message"><span  ng-bind="call.callsid"></span></p>
+                          </span>
+                        </span>
+                        <a type="button" class=" callHistory flex-1" ng-bind="call.num" ng-click="quickCallNumber(call.num)"></a>
+                        <p ng-bind="call.calltype"></p>
+                        <p ng-bind="call.date"></p>
+                        <p ng-bind="call.time"></p>
+                        <p><a type="button" class=" callhistory flex-1" ng-click="quickCall(call.num)">Call</a></p>
+                    </div>
+                  
+                </div>
+                
+            </div>
+            <div class="panel-content flex-1 fcol" ng-show="panelContent.selected == 'settings'">
+                <h1 class="panel-content-header with-border">Settings</h1>
+                <div class="settings-group">
+                    <div class="settings-item">
+                        <h4 class="settings-label">WebRTC Username:</h4>
+                        <p class="settings-value">{{ storage.data.username }}</p>
+                    </div>
+                    <div class="settings-item">
+                        <h4 class="settings-label">Access Token:</h4>
+                        <p class="settings-value">{{ storage.data.accessToken}}</p>
+                    </div>
+                    <div class="settings-item">
+                        <h4 class="settings-label">Speaker Source: <small class="text-success" ng-if="notifications.speakerUpdated" ng-bind="notifications.updateMessage"></small></h4>
+                        <select class="form-control" name="speakerSource" id="speakerSource" ng-change="mediaDevices.updateSpeaker()" ng-options="item as item.label for item in mediaDevices.availableSpeakerDevices" ng-model="mediaDevices.speakerSource">
+                            <option value="">Select a source to update.</option>
+                        </select>
+                    </div>
+                    <div class="settings-item">
+                        <h4 class="settings-label">Microphone Source: <small class="text-success" ng-if="notifications.audioUpdated" ng-bind="notifications.updateMessage"></small></h4>
+                        <select class="form-control" name="micSource" id="micSource" ng-change="mediaDevices.updateAudio()" ng-options="item as item.label for item in mediaDevices.availableAudioDevices" ng-model="mediaDevices.audioSource">
+                            <option value="">Select a source to update</option>
+                        </select>
+                    </div>
+                    <div class="settings-item">
+                        <h4 class="settings-label with-border">Other Options:</h4>
+                        <p class="text-muted"><small>Don't see your media sources? Click the button below to refresh your devices.</small></p>
+                        <button type="button" class="btn btn-primary" ng-click="mediaDevices.refreshDevices()">Refresh Devices</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <div class="card flex fcol ui popup callinfo animated fadeIn" ng-show="verto.data.call">
+        <div class="card-content flex fcol flex-1">
+            <div class="content-container">
+                <p><i class="fa fa-phone"></i> Dialed Number</p>
+                <p class="with-border" ng-bind="storage.data.calledNumber"></p>
+                <p class="with-border" ng-bind="storage.data.direction"></p>
+            </div>
+            <div class="content-container">
+                <p><i class="fa fa-clock-o"></i> Call Duration</p>
+                <timer class="with-border" auto-start="false" interval="1000">
+                    {{hhours}}:{{mminutes}}:{{sseconds}}
+                </timer>
+            </div>
+            <div class="content-container">
+                <div class="button-group">
+                    <button type="button"  class="btn btn-primary callaction" ng-click="muteMic(cbMuteMic)"><i ng-class="{'fa fa-microphone' : !storage.data.mutedMic, 'fa fa-microphone-slash' : storage.data.mutedMic}"></i></button>
+                    <button type="button" class="btn btn-primary callaction" ng-click="hold()"><i ng-class="{'fa fa-pause' : !storage.data.onHold, 'fa fa-play' : storage.data.onHold}"></i></button>
+                    <button type="button" class="btn btn-danger hangup" ng-click="hangup()">Hangup</button>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+
+    <div class="card flex fcol ui popup mini callprompt animated fadeIn" ng-show="incomingCall">
+        <div class="card-header">
+            <h4>Incoming Call</h4>
+        </div>
+        <div class='card-content flex fcol flex-1'>
+            <div class="content-container">
+                <p><i class="fa fa-id-badge"></i> Caller ID</p>
+                <p class="with-border" ng-bind="incomingDid || UNKNOWN"></p>
+            </div>
+            <div class="content-container">
+                <div class="button-group">
+                    <button type="button" class="btn btn-success" ng-click="answerCall()">Answer</button>
+                    <button type="button" class="btn btn-danger" ng-click="declineCall()">Decline</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>

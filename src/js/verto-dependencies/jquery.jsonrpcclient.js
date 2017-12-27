@@ -71,8 +71,8 @@
             login         : null, /// auth login
             passwd        : null, /// auth passwd
             sessid        : null,
-	    loginParams   : null,
-	    userVariables : null,
+        loginParams   : null,
+        userVariables : null,
             getSocket     : function(onmessage_cb) { return self._getSocket(onmessage_cb); }
         }, options);
 
@@ -94,25 +94,25 @@
 
     $.JsonRpcClient.prototype.speedTest = function (bytes, cb) {
         var socket = this.options.getSocket(this.wsOnMessage);
-	if (socket !== null) {
-	    this.speedCB = cb;
-	    this.speedBytes = bytes;
-	    socket.send("#SPU " + bytes);
+    if (socket !== null) {
+        this.speedCB = cb;
+        this.speedBytes = bytes;
+        socket.send("#SPU " + bytes);
 
-	    var loops = bytes / 1024;
-	    var rem = bytes % 1024;
-	    var i;
-	    var data = new Array(1024).join(".");
-	    for (i = 0; i < loops; i++) {
-		socket.send("#SPB " + data);
-	    }
-	    
-	    if (rem) {
-		socket.send("#SPB " + data);
-	    }
+        var loops = bytes / 1024;
+        var rem = bytes % 1024;
+        var i;
+        var data = new Array(1024).join(".");
+        for (i = 0; i < loops; i++) {
+        socket.send("#SPB " + data);
+        }
+        
+        if (rem) {
+        socket.send("#SPB " + data);
+        }
 
-	    socket.send("#SPE");
-	}
+        socket.send("#SPE");
+    }
     };
 
 
@@ -278,7 +278,7 @@
     };
 
     $.JsonRpcClient.prototype.closeSocket = function() {
-	var self = this;
+    var self = this;
         if (self.socketReady()) {
             self._ws_socket.onclose = function (w) {console.log("Closing Socket");};
             self._ws_socket.close();
@@ -286,11 +286,11 @@
     };
 
     $.JsonRpcClient.prototype.loginData = function(params) {
-	var self = this;
+    var self = this;
         self.options.login = params.login;
         self.options.passwd = params.passwd;
-	self.options.loginParams = params.loginParams;
-	self.options.userVariables = params.userVariables;
+    self.options.loginParams = params.loginParams;
+    self.options.userVariables = params.userVariables;
     };
 
     $.JsonRpcClient.prototype.connectSocket = function(onmessage_cb) {
@@ -409,23 +409,23 @@
         // Check if this could be a JSON RPC message.
         var response;
 
-	// Special sub proto
-	if (event.data[0] == "#" && event.data[1] == "S" && event.data[2] == "P") {
-	    if (event.data[3] == "U") {
-		this.up_dur = parseInt(event.data.substring(4));
-	    } else if (this.speedCB && event.data[3] == "D") {
-		this.down_dur = parseInt(event.data.substring(4));
+    // Special sub proto
+    if (event.data[0] == "#" && event.data[1] == "S" && event.data[2] == "P") {
+        if (event.data[3] == "U") {
+        this.up_dur = parseInt(event.data.substring(4));
+        } else if (this.speedCB && event.data[3] == "D") {
+        this.down_dur = parseInt(event.data.substring(4));
 
-		var up_kps = (((this.speedBytes * 8) / (this.up_dur / 1000)) / 1024).toFixed(0);
-		var down_kps = (((this.speedBytes * 8) / (this.down_dur / 1000)) / 1024).toFixed(0);
-		
-		console.info("Speed Test: Up: " + up_kps + " Down: " + down_kps);
-		this.speedCB(event, { upDur: this.up_dur, downDur: this.down_dur, upKPS: up_kps, downKPS: down_kps });
-		this.speedCB = null;
-	    }
-	    
-	    return;
-	}
+        var up_kps = (((this.speedBytes * 8) / (this.up_dur / 1000)) / 1024).toFixed(0);
+        var down_kps = (((this.speedBytes * 8) / (this.down_dur / 1000)) / 1024).toFixed(0);
+        
+        console.info("Speed Test: Up: " + up_kps + " Down: " + down_kps);
+        this.speedCB(event, { upDur: this.up_dur, downDur: this.down_dur, upKPS: up_kps, downKPS: down_kps });
+        this.speedCB = null;
+        }
+        
+        return;
+    }
 
 
         try {
@@ -471,7 +471,7 @@
                         self.authing = true;
 
                         this.call("login", { login: self.options.login, passwd: self.options.passwd, loginParams: self.options.loginParams,
-					     userVariables: self.options.userVariables},
+                         userVariables: self.options.userVariables},
                             this._ws_callbacks[response.id].request_obj.method == "login" ?
                             function(e) {
                                 self.authing = false;
