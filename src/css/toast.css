@@ -1,0 +1,24 @@
+body > div.custom-toast.ng-toast.ng-toast--right.ng-toast--top > ul {
+    margin-right: 0px !important;
+    bottom: 0 !important;
+    top: auto !important;
+    left: 20px !important;
+    right: auto !important;
+}
+
+.alert {
+    border-radius: 0 !important;
+}
+
+.alert.alert-danger {
+    background: #c9302c;
+}
+
+.alert.alert-info {
+    background: #337ab7;
+}
+
+.toast-text {
+    color: white !important;
+    font-weight: 600;
+}

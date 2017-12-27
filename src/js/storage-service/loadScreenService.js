@@ -30,7 +30,7 @@ angular.module('storageService')
 
                     if (!navigator.getUserMedia) {
                         result['status'] = 'error';
-                        result['message'] = $translate.instant("Something went wrong.");
+                        result['message'] = $translate.instant("Browser isn't compatible.");
                         reject(result);
                     }
                     resolve(result);
@@ -51,7 +51,7 @@ angular.module('storageService')
                     verto.mediaPerm(function(status) {
                         if(!status) {
                             result['status'] = 'error';
-                            result['message'] = $translate.instant("Something went wrong.");
+                            result['message'] = $translate.instant("Error getting media permissions.");
                             verto.data.mediaPerm = false;
                             reject(result);
                         }
@@ -68,7 +68,7 @@ angular.module('storageService')
                         'status': 'success',
                         'activity': activity,
                         'soft' : true,
-                        'message': $translate.instant("Re")
+                        'message': $translate.instant("Rereshing media devices.")
                     };
 
                     verto.refreshDevices(function(status) {

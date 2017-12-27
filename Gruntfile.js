@@ -24,14 +24,6 @@ module.exports = function(grunt) {
                     expand: true
                 }]
             },
-            dist_bootstrap: {
-                files: [{
-                    cwd: 'bower_components/bootstrap/dist/css/',
-                    src: 'bootstrap.min.css',
-                    dest: './dist/css/',
-                    expand: true
-                }]
-            },
             dist_fontawesome: {
                 files: [{
                     cwd: 'bower_components/font-awesome/css',
@@ -45,6 +37,14 @@ module.exports = function(grunt) {
                     cwd: './src/css',
                     src: '*.min.css',
                     dest: './build/css/',
+                    expand: true
+                }]
+            },
+            toast_css: {
+                files: [{
+                    cwd: './src/css',
+                    src: 'toast.css',
+                    dest: './dist/css/',
                     expand: true
                 }]
             },
@@ -70,13 +70,11 @@ module.exports = function(grunt) {
                         './src/js/controllers/vertoControllers.module.js',
                         './src/js/controllers/mainController.js',
                         './src/js/controllers/loginController.js',
-                        './src/js/controllers/loadScreenController.js',
                         './src/js/controllers/dialpadController.js',
                         './src/js/controllers/wsReconnectController.js',
-                        './src/js/controllers/cidController.js',
-                        './src/js/controllers/sidemenuController.js',
-                        './src/js/controllers/chModalController.js',
                         './src/js/controllers/widgetController.js',
+                        './src/js/controllers/progressController.js',
+                        './src/js/controllers/dashboardPanelController.js'
                     ],
                     './build/js/app-services.minsafe.js': [
                         './src/js/verto-service/vertoService.module.js',
@@ -94,14 +92,8 @@ module.exports = function(grunt) {
         cssmin: {
             target: {
                 files: {
-                    './build/css/animate.min.css': [
-                        './src/css/animate.css'
-                    ],
-                    './build/css/dashboard.min.css': [
-                        './src/css/dashboard.css'
-                    ],
-                    './build/css/spinners.min.css': [
-                        './src/css/spinners.css'
+                    './build/css/main.min.css': [
+                        './src/css/main.css'
                     ],
                     './build/css/widget.min.css': [
                         './src/css/widget.css'
@@ -115,12 +107,12 @@ module.exports = function(grunt) {
             },
             css_main: {
                 src: [
-                    './build/css/bootstrap.min.css',
-                    './build/css/animate.min.css',
-                    './build/css/dashboard.min.css',
-                    './build/css/spinners.min.css',
+                    './bower_components/bootstrap/dist/css/bootstrap.css',
+                    './bower_components/animatecss/animate.min.css',
+                    './bower_components/angular-tooltips/dist/angular-tooltips.css',
                     './bower_components/ngToast/dist/ngToast.min.css',
                     './bower_components/ngToast-animations.min.css',
+                    './build/css/main.min.css'
                 ],
                 dest: './dist/css/<%= pkg.name %>.css'
             },
@@ -155,9 +147,10 @@ module.exports = function(grunt) {
                     './bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js',
                     './bower_components/humanize-duration/humanize-duration.js',
                     './bower_components/angular-timer/dist/angular-timer.min.js',
-                    './bower_components/angular-prompt/dist/angular-prompt.min.js',
                     './bower_components/angular-audio/app/angular.audio.js',
-                    './bower_components/angular-messages/angular-messages.min.js'
+                    './bower_components/angular-svg-round-progressbar/build/roundProgress.min.js',
+                    './bower_components/ng-letter-avatar/dist/ngletteravatar.min.js',
+                    './bower_components/angular-tooltips/dist/angular-tooltips.min.js'
                 ],
                 dest: './build/libs/<%= pkg.name %>-libs.js'
             },
@@ -177,7 +170,7 @@ module.exports = function(grunt) {
         uglify: {
             options: {
                 compress: {
-                    drop_console: true,
+                    drop_console: false,
                     properties: true,
                     dead_code: true,
                     conditionals: true,

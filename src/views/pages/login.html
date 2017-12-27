@@ -1,0 +1,77 @@
+<div class="page-wrapper flex fcol fcenter flex-1">
+    <div class="banner">
+        <img src="src/images/m360logo-ytel.svg" alt="no image" class="m360logo"/>
+    </div>
+    <div class="card med flex fcol ui" ng-show="progressLoading">
+        <div class="card-header">
+            <h3>Hold on, we're getting things ready.</h3>
+        </div>
+        <div class="card-content flex fcenter fcol flex-1" ng-controller='progressController' ng-cloak>
+            <div class="progress-wrapper">
+                <round-progress
+                    max="max"
+                    current="current"
+                    color="{{ getColor() }}"
+                    bgcolor="{{ bgColor }}"
+                    radius="{{ radius }}"
+                    semi="isSemi"
+                    rounded="rounded"
+                    stroke="{{ stroke }}"
+                    clockwise="clockwise"
+                    responsive="responsive"
+                    duration="{{ duration }}"
+                    animation="{{ currentAnimation }}"
+                    offset="{{ offset }}"
+                    animation-delay="{{ animationDelay }}"
+                    on-render="showPreciseCurrent">
+                    <svg>
+                        <linearGradient id="gradient" x1="0" x2="0" y1="0" y2="1">
+                            <stop offset="5%"  stop-color="green"/>
+                            <stop offset="95%" stop-color="gold"/>
+                        </linearGradient>
+                    </svg>
+                </round-progress>
+            </div>
+            <h3 ng-bind="message"></h3>
+        </div>
+        <div class="card-footer">
+        </div>
+    </div>
+    <div class="card med flex fcol ui animated fadeIn" ng-hide="progressLoading" ng-cloak>
+        <div class="card-header">
+            <h1>WebRTC Client</h1>
+            <p class="text-muted"><small>Login using your WebRTC credentials</small></p>
+        </div>
+        <div class="card-content flex fcenter flex-1">
+            <form name="login_form" ng-submit="login()" novalidate>
+                <div class="form-group">
+                    <p class="text-danger" ng-if="loginErrors.message"><small ng-bind="loginErrors.message"></small></p>
+                </div>
+                <div class="input-group">
+                    <span class="input-group-addon" id="usernameIcon"><i class="fa fa-user"></i></span>
+                    <input type="text" class="form-control" ng-class="{ 'has-error': loginErrors.type == 'username' }" ng-model="user.username" ng-change="loginErrors.clearErrors('username')" placeholder="Username" aria-describedby="usernameAddon">
+                </div>
+                <p class="text-danger" ng-if="loginErrors.type == 'username' && loginErrors.fieldSpecificMessage"><small ng-bind="loginErrors.fieldSpecificMessage"></small></p>
+                <div class="input-group">
+                    <span class="input-group-addon" id="usernameIcon"><i class="fa fa-lock"></i></span>
+                    <input type="password" class="form-control" ng-class="{ 'has-error': loginErrors.type == 'password' }" ng-model="user.password" placeholder="Password" ng-change="loginErrors.clearErrors('password')" aria-describedby="passwordAddon">
+                </div>
+                <p class="text-danger" ng-if="loginErrors.type == 'password' && loginErrors.fieldSpecificMessage"><small ng-bind="loginErrors.fieldSpecificMessage"></small></p>
+                <div class="form-group">
+                    <button type="submit" ng-disabled="authenticating" class="btn btn-primary"><i class="fa fa-sign-in"></i>
+                        <span ng-show="!authenticating">Login</span>
+                        <span ng-show="authenticating">Logging in...</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+        <div class="card-footer">
+            <p class='text-muted'>
+                <small>Manage WebRTC for your message360 account via the <a href=''>WebRTC Admin</a> portal.</small>
+            </p>
+            <p class='text-muted'>
+                <small>Having trouble? Please contact support@ytel.com.</small>
+            </p>
+        </div>
+    </div>
+</div>
