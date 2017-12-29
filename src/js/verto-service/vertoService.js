@@ -1,40 +1,124 @@
 /* Controllers */
 var videoQuality = [];
-var videoQualitySource = [
-    {id: 'qvga', label: 'QVGA 320x240', width: 320, height: 240},
-    {id: 'vga', label: 'VGA 640x480', width: 640, height: 480},
-    {id: 'qvga_wide', label: 'QVGA WIDE 320x180', width: 320, height: 180},
-    {id: 'vga_wide', label: 'VGA WIDE 640x360', width: 640, height: 360},
-    {id: 'hd', label: 'HD 1280x720', width: 1280, height: 720},
-    {id: 'hhd', label: 'HHD 1920x1080', width: 1920, height: 1080}
+var videoQualitySource = [{
+        id: 'qvga',
+        label: 'QVGA 320x240',
+        width: 320,
+        height: 240
+    },
+    {
+        id: 'vga',
+        label: 'VGA 640x480',
+        width: 640,
+        height: 480
+    },
+    {
+        id: 'qvga_wide',
+        label: 'QVGA WIDE 320x180',
+        width: 320,
+        height: 180
+    },
+    {
+        id: 'vga_wide',
+        label: 'VGA WIDE 640x360',
+        width: 640,
+        height: 360
+    },
+    {
+        id: 'hd',
+        label: 'HD 1280x720',
+        width: 1280,
+        height: 720
+    },
+    {
+        id: 'hhd',
+        label: 'HHD 1920x1080',
+        width: 1920,
+        height: 1080
+    }
 ];
 var videoResolution = {
-    qvga: {width: 320, height: 240},
-    vga: {width: 640, height: 480},
-    qvga_wide: {width: 320, height: 180},
-    vga_wide: {width: 640, height: 360},
-    hd: {width: 1280, height: 720},
-    hhd: {width: 1920, height: 1080}
+    qvga: {
+        width: 320,
+        height: 240
+    },
+    vga: {
+        width: 640,
+        height: 480
+    },
+    qvga_wide: {
+        width: 320,
+        height: 180
+    },
+    vga_wide: {
+        width: 640,
+        height: 360
+    },
+    hd: {
+        width: 1280,
+        height: 720
+    },
+    hhd: {
+        width: 1920,
+        height: 1080
+    }
 };
-var bandwidth = [
-    {id: '250', label: '250kb'},
-    {id: '500', label: '500kb'},
-    {id: '1024', label: '1mb'},
-    {id: '1536', label: '1.5mb'},
-    {id: '2048', label: '2mb'},
-    {id: '3196', label: '3mb'},
-    {id: '4192', label: '4mb'},
-    {id: '5120', label: '5mb'},
-    {id: '0', label: 'No Limit'},
-    {id: 'default', label: 'Server Default'}
+var bandwidth = [{
+        id: '250',
+        label: '250kb'
+    },
+    {
+        id: '500',
+        label: '500kb'
+    },
+    {
+        id: '1024',
+        label: '1mb'
+    },
+    {
+        id: '1536',
+        label: '1.5mb'
+    },
+    {
+        id: '2048',
+        label: '2mb'
+    },
+    {
+        id: '3196',
+        label: '3mb'
+    },
+    {
+        id: '4192',
+        label: '4mb'
+    },
+    {
+        id: '5120',
+        label: '5mb'
+    },
+    {
+        id: '0',
+        label: 'No Limit'
+    },
+    {
+        id: 'default',
+        label: 'Server Default'
+    }
 ];
-var framerate = [
-    {id: '15', label: '15 FPS'},
-    {id: '20', label: '20 FPS'},
-    {id: '30', label: '30 FPS'}
+var framerate = [{
+        id: '15',
+        label: '15 FPS'
+    },
+    {
+        id: '20',
+        label: '20 FPS'
+    },
+    {
+        id: '30',
+        label: '30 FPS'
+    }
 ];
 
-angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storage', '$location', function ($rootScope, $state, storage, $location) {
+angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storage', '$location','$timeout', function ($rootScope, $state, storage, $location,$timeout) {
     var data = {
         // Connection data.
         instance: null,
@@ -53,13 +137,17 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
         speakerDevices: [],
         videoQuality: [],
         extension: null,
-        name: storage.data.name || null,
-        cid: storage.data.cid || null,
+        name: null,
+        first_name: null,
+        last_name: null,
+        username: null,
+        country_code: null,
+        cid: null,
         textTo: null,
         login: null,
         passwd: null,
-        hostname: "message360.com",
-        wsURL: "wss://id1246ab.message360.com:8082"
+        hostname: "",
+        wsURL: ""
     };
 
     function cleanCall() {
@@ -123,12 +211,14 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
         bandwidth: bandwidth,
         framerate: framerate,
         refreshDevicesCallback: function refreshDevicesCallback(callback) {
-            data.videoDevices = [
-                {id: 'none', label: 'No Camera'}
-            ];
-            data.shareDevices = [
-                {id: 'screen', label: 'Screen'}
-            ];
+            data.videoDevices = [{
+                id: 'none',
+                label: 'No Camera'
+            }];
+            data.shareDevices = [{
+                id: 'screen',
+                label: 'Screen'
+            }];
             data.audioDevices = [];
             data.speakerDevices = [];
             if (!storage.data.selectedShare) {
@@ -137,10 +227,15 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
             for (var i in jQuery.verto.videoDevices) {
                 var device = jQuery.verto.videoDevices[i];
                 if (!device.label) {
-                    data.videoDevices.push({id: 'Camera ' + i, label: 'Camera ' + i});
-                }
-                else {
-                    data.videoDevices.push({id: device.id, label: device.label || device.id});
+                    data.videoDevices.push({
+                        id: 'Camera ' + i,
+                        label: 'Camera ' + i
+                    });
+                } else {
+                    data.videoDevices.push({
+                        id: device.id,
+                        label: device.label || device.id
+                    });
                 }
                 // Selecting the first source.
                 if (i == 0 && !storage.data.selectedVideo) {
@@ -148,11 +243,16 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
                     storage.data.selectedVideoLabel = device.label;
                 }
                 if (!device.label) {
-                    data.shareDevices.push(
-                        {id: 'Share Device ' + i, label: 'Share Device ' + i});
+                    data.shareDevices.push({
+                        id: 'Share Device ' + i,
+                        label: 'Share Device ' + i
+                    });
                     continue;
                 }
-                data.shareDevices.push({id: device.id, label: device.label || device.id});
+                data.shareDevices.push({
+                    id: device.id,
+                    label: device.label || device.id
+                });
             }
             for (var i in jQuery.verto.audioInDevices) {
                 var device = jQuery.verto.audioInDevices[i];
@@ -162,10 +262,16 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
                     storage.data.selectedAudioLabel = device.label;
                 }
                 if (!device.label) {
-                    data.audioDevices.push({id: 'Microphone ' + i, label: 'Microphone ' + i});
+                    data.audioDevices.push({
+                        id: 'Microphone ' + i,
+                        label: 'Microphone ' + i
+                    });
                     continue;
                 }
-                data.audioDevices.push({id: device.id, label: device.label || device.id});
+                data.audioDevices.push({
+                    id: device.id,
+                    label: device.label || device.id
+                });
             }
             for (var i in jQuery.verto.audioOutDevices) {
                 console.log(jQuery.verto.audioOutDevices);
@@ -176,10 +282,16 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
                     storage.data.selectedSpeakerLabel = device.label;
                 }
                 if (!device.label) {
-                    data.speakerDevices.push({id: 'Speaker ' + i, label: 'Speaker ' + i});
+                    data.speakerDevices.push({
+                        id: 'Speaker ' + i,
+                        label: 'Speaker ' + i
+                    });
                     continue;
                 }
-                data.speakerDevices.push({id: device.id, label: device.label || device.id});
+                data.speakerDevices.push({
+                    id: device.id,
+                    label: device.label || device.id
+                });
             }
             console.debug('Devices were refreshed, checking that we have cameras.');
             // Verify if selected devices are valid
@@ -203,9 +315,11 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
             if (data.videoDevices.length === 0) {
                 console.log('No camera, disabling video.');
                 data.canVideo = false;
-                data.videoDevices.push({id: 'none', label: 'No camera'});
-            }
-            else {
+                data.videoDevices.push({
+                    id: 'none',
+                    label: 'No camera'
+                });
+            } else {
                 data.canVideo = true;
             }
             if (angular.isFunction(callback)) {
@@ -217,8 +331,7 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
             console.debug('Attempting to refresh the devices.');
             if (callback) {
                 jQuery.verto.refreshDevices(callback);
-            }
-            else {
+            } else {
                 jQuery.verto.refreshDevices(this.refreshDevicesCallback);
             }
         },
@@ -237,12 +350,12 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
                 }
                 updateResolutions(resolutions['validRes']);
                 data.instance.videoParams({
-                    minWidth: w
-                    , minHeight: h
-                    , maxWidth: w
-                    , maxHeight: h
-                    , minFrameRate: 15
-                    , vertoBestFrameRate: storage.data.bestFrameRate
+                    minWidth: w,
+                    minHeight: h,
+                    maxWidth: w,
+                    maxHeight: h,
+                    minFrameRate: 15,
+                    vertoBestFrameRate: storage.data.bestFrameRate
                 });
                 videoQuality.forEach(function (qual) {
                     if (w === qual.width && h === qual.height) {
@@ -251,8 +364,7 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
                         }
                     }
                 });
-            }
-            else {
+            } else {
                 console.debug('There is no instance of verto.');
             }
         },
@@ -264,7 +376,8 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
          * @param callback
          */
         connect: function (callback) {
-            console.debug('Attempting to connect to verto.');
+            console.debug('Attempting to connect to verto with data: ');
+            console.log(data);
             var that = this;
             var callbacks = {
                 onWSLogin: function (v, success) {
@@ -279,32 +392,52 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
                     if (!data.call) {
                         data.call = d;
                     }
+                    $rootScope.customStyle = {};
                     console.debug('onDialogState:', d);
                     console.debug(storage.data.calling);
                     console.log(data.callState);
+                    
+                    storage.data.calltype = d.direction.name;
+                   
                     switch (d.state.name) {
                         case "ringing":
+                            console.log('into ringing');
+                            data.callState = 'ringing';
                             incomingCall(d.params.caller_id_number);
                             break;
                         case "trying":
+                        console.debug('Calling 1111:', d.cidString());
+                         $timeout(function() {
+                            console.log("in timer");
+                             $("#dialpadNumber").css("color","green");
                             console.debug('Calling:', d.cidString());
                             data.callState = 'trying';
-                            break;
+                           
+                         }, 5000);
+                        break;
+                        
                         case "early":
-                            calling();
+                            calling();                            
                             console.debug('Talking to:', d.cidString());
                             data.callState = 'early';
                             break;
                         case "active":
+                        $rootScope.model = {
+                                isDisabled: true
+                            };
+                          $("#dialpadNumber").css("color","blue");
                             console.debug('Talking to:', d.cidString());
                             data.callState = 'active';
                             callActive(d.lastState.name, d.params);
                             break;
                         case "hangup":
+                            console.log(d);
                             console.debug('Call ended with cause: ' + d.cause);
                             data.callState = 'hangup';
                             break;
                         case "destroy":
+                         
+                         $("#dialpadNumber").css("color","");
                             console.debug('Destroying: ' + d.cause);
                             cleanCall();
                             break;
@@ -319,10 +452,12 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
                     }
                 },
                 onWSClose: function (v, success) {
+                     
                     console.debug('onWSClose:', success);
                     $rootScope.$emit('ws.close', success);
                 },
                 onEvent: function (v, e) {
+                    
                     console.log(data.instance.handleMessage);
                 }
             };
@@ -345,12 +480,14 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
                     return;
                 }
                 data.instance = new jQuery.verto({
-                    login: data.login + '@' + data.hostname,
+                    login: data.login,
                     passwd: data.passwd,
                     socketUrl: data.wsURL,
                     tag: "webcam",
-                    ringFile: "public/sounds/bellring.wav",
-                    userVariables: {name: data.name},
+                    ringFile: "src/sounds/bellring.wav",
+                    userVariables: {
+                        webrtc_username: storage.data.username
+                    },
                     audioParams: {
                         googEchoCancellation: storage.data.googEchoCancellation || true,
                         googNoiseSuppression: storage.data.googNoiseSuppression || true,
@@ -392,8 +529,8 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
          */
         login: function (callback) {
             data.instance.loginData({
-                login: data.login + '@' + data.hostname,
-                passwd: data.password
+                login: data.login,
+                passwd: data.passwd
             });
             data.instance.login();
             if (angular.isFunction(callback)) {
@@ -426,8 +563,8 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
             console.debug('Attempting to call destination ' + destination + '.');
             var call = data.instance.newCall(angular.extend({
                 destination_number: destination,
-                caller_id_name: storage.data.cid_number,
-                caller_id_number: storage.data.cid_number,
+                caller_id_name: storage.data.callerIdNumber,
+                caller_id_number: storage.data.callerIdNumber,
                 outgoingBandwidth: storage.data.outgoingBandwidth,
                 incomingBandwidth: storage.data.incomingBandwidth,
                 useVideo: storage.data.useVideo,
@@ -437,7 +574,9 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
                 useMic: storage.data.selectedAudio,
                 dedEnc: storage.data.useDedenc,
                 mirrorInput: storage.data.mirrorInput,
-                userVariables: {name: storage.data.name}
+                userVariables: {
+                    name: storage.data.name
+                }
             }, custom));
             data.call = call;
             data.mutedMic = false;
@@ -454,6 +593,7 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
          * @param callback
          */
         hangup: function (callback) {
+            $rootScope.dtmfCall();
             console.debug('Attempting to hangup the current call.');
             if (!data.call) {
                 console.debug('There is no call to hangup.');
@@ -542,6 +682,33 @@ angular.module('vertoService').service('verto', ['$rootScope', '$state', 'storag
             if (angular.isFunction(callback)) {
                 callback(data.instance, true);
             }
+        },
+
+        SaveState: function () {
+            console.log('into save');
+            var restoreData = {
+                "username" : data.username,
+                "cid" : data.cid,
+                "first_name" : data.first_name,
+                "last_name" : data.last_name,
+                "name" : data.first_name + " " + data.last_name,
+                "passwd" : data.access_token,
+                "hostname" : data.webrtc_domain,
+                "country_code" : data.country_code,
+                "wsURL" : data.wsURL,
+                "connecting" : true,
+                "login" : data.login,
+            };
+            var store = angular.toJson(restoreData);
+            localStorage.setItem('vertoStorageData', store);
+            console.log(data);
+        },
+
+        RestoreState: function () {
+            console.log('into restore');
+            restoreData = JSON.parse(localStorage["vertoStorageData"]);
+            console.log(data);
+            return restoreData;
         }
 
     }

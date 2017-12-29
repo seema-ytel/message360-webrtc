@@ -1,0 +1,11 @@
+
+{
+    "login_url": "/m360helper-v3/webrtc/agentLogin.php",
+    "funds_url": "/m360helper-v3/webrtc/checkFunds.php",
+    "number_url": "/m360helper-v3/webrtc/authenticateNumber.php",
+    "token_url": "/m360helper-v3/webrtc/createToken.php",
+    "token_url_number_change": "/m360helper-v3/webrtc/createTokenFromNumberChange.php",
+    "logs_url": "/m360helper-v3/webrtc/getWebRtcLogs.php",
+    "phone_number_list_url": "/m360helper-v3/webrtc/getWebrtcOverrideNumbersunassigned.php"
+
+}

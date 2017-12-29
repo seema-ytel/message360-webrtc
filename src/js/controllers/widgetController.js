@@ -1,5 +1,5 @@
 var widgetController = angular.module("vertoControllers")
-    .controller('widgetController', function ($scope, $rootScope, $http, $location, $timeout, $q, verto, storage, ngAudio) {
+    .controller('widgetController', function ($scope, $rootScope, $http, $location, $timeout, $q, verto, storage, $state, ngAudio) {
         //Initialize the widget content
         console.debug("widgetcontroller load");
         $scope.content = {};
@@ -7,10 +7,12 @@ var widgetController = angular.module("vertoControllers")
         $scope.errors = {};
         $scope.dialpad = {};
         $scope.authenticatedNumber = false;
+        $scope.callData = {};
         function init() {
             $scope.content.showLogin = true;
             $scope.content.showDialer = false;
             $scope.content.showInCall = false;
+            $scope.content.incomingCall = false;
         }
 
         init();
@@ -20,7 +22,9 @@ var widgetController = angular.module("vertoControllers")
         }
 
         function checkFunds() {
-            $http.post($rootScope.fundUrl).then(function (response) {
+            console.log('funds url');
+            console.log($rootScope.fundsUrl);
+            $http.post($rootScope.fundsUrl).then(function (response) {
                 if (response.data.Message360.ResponseStatus != 1) {
                     $scope.logout();
                     $scope.errors.fundError = response.data.Message360.Errors.Error.Code + ": " + response.data.Message360.Errors.Error.Message + ".";
@@ -32,6 +36,8 @@ var widgetController = angular.module("vertoControllers")
                 }
             });
         }
+
+        
 
         $scope.logout = function () {
             var disconnectCallback = function () {
@@ -56,11 +62,11 @@ var widgetController = angular.module("vertoControllers")
             $http.post($rootScope.numberUrl, data).then(function (response) {
                 if (response.data.Message360.Errors) {
                     console.log(response.data.Message360);
-                    $scope.errors.cidError = response.data.Message360.Errors.Error.Code + ": " + response.data.Message360.Errors.Error.Message;
+                    $scope.errors.cidError = response.data.Message360.Errors.Error[0].Code + ": " + response.data.Message360.Errors.Error[0].Message;
                     $rootScope.$broadcast('addError');
                     return $scope.authenticatedNumber = false;
                 } else {
-                    storage.data.cid_number = $scope.user.cid;
+                    storage.data.callerIdNumber = $scope.user.cid;
                     return $scope.authenticatedNumber = true;
                 }
             });
@@ -71,12 +77,16 @@ var widgetController = angular.module("vertoControllers")
                 $scope.$apply(function () {
                     verto.data.connecting = false;
                     if (connected) {
-                        storage.data.ui_connected = verto.data.connected;
-                        storage.data.ws_connected = verto.data.connected;
-                        storage.data.name = $scope.user.username;
-                        storage.data.email = verto.data.email;
-                        storage.data.login = verto.data.login;
+                        storage.data.uiConnected = verto.data.connected;
+                        storage.data.wsConnected = verto.data.connected;
+                        storage.data.firstName = verto.data.first_name;
+                        storage.data.lastName = verto.data.last_name;
+                        storage.data.countryCode = verto.data.country_code;
+                        storage.data.callerIdNumber = verto.data.cid;
+                        storage.data.username = verto.data.username;
+                        storage.data.webrtcDomain = verto.data.hostname;
                         storage.data.accessToken = verto.data.passwd;
+                      //  storage.data.numOfCalls = 0;
                     }
                     if (verto.data.connected == true) {
                         $scope.content.showLogin = false;
@@ -88,23 +98,59 @@ var widgetController = angular.module("vertoControllers")
                     }
                 });
             };
-
-            $http.post($rootScope.tokenUrl).then(function (response) {
-                if (response.data.Message360.Errors) {
-                    $scope.errors.authError = response.data.Message360.Errors.Error.Code + ": " + response.data.Message360.Errors.Error.Message;
+            var data = {
+                phone_number: $scope.user.cid,
+                username: $scope.user.username
+            };
+            $http.post($rootScope.tokenUrl,data).then(function (res) {
+                if (res.data.error_message) {
+                    $scope.errors.serverError = 'Error establshing a connection, please try again in a few minutes.';
                     $rootScope.$broadcast('addError');
-                    return false;
+                    return;
                 }
-                else if (response.data.Message360.Message['token']) {
-                    var token = response.data.Message360.Message['token'];
-                    console.log("token set");
-                    verto.data.login = token;
-                    verto.data.passwd = token;
-                    verto.data.connecting = true;
-                    verto.connect(connectCallback);
+                if (res.data.Message360.Errors) {
+                    var errorCode = res.data.Message360.Errors.Error[0].Code;
+                    var message = res.data.Message360.Errors.Error[0].Message;
+                    switch (errorCode) {
+                        case 'ER-M360-WRT-107':
+                            //$scope.loginErrors.type = 'username';
+                            $scope.errors.authError = message;
+                            $rootScope.$broadcast('addError');
+                            break;
+                        case 'ER-M360-WRT-104':
+                            $scope.errors.cidError = message;
+                            $rootScope.$broadcast('addError');
+                        
+                        default:
+                            $scope.errors.serverError = 'Error establshing a connection, please try again in a few minutes.';
+                            $rootScope.$broadcast('addError');
+                            break;
+                    }
+                    $scope.authenticating = false;
+                    return;
+
                 }
+                var data = res.data.Message360.Message;
+                var server_id = data.server_id.toLowerCase();
+                console.log("Server id : "+server_id);
+                storage.data.currentBalance = data.available_balance;
+                verto.data.username = data.username;
+                verto.data.cid = data.phone_number;
+                verto.data.first_name = data.first_name;
+                verto.data.last_name = data.last_name;
+                verto.data.name = data.first_name + " " + data.last_name;
+                verto.data.passwd = data.access_token;
+                verto.data.hostname = data.webrtc_domain;
+                verto.data.country_code = data.country_code;
+                verto.data.wsURL = 'wss://'+server_id+'.message360.com:8082';
+
+                verto.data.connecting = true;
+                verto.data.login = verto.data.cid + "!" + verto.data.username + "@" + verto.data.hostname;
+                verto.connect(connectCallback);
             }, function (err) {
-                console.error(err);
+                $scope.errors.serverError = 'Error establshing a connection, please try again in a few minutes.';
+                $rootScope.$broadcast('addError');
+                return;
             });
 
         };
@@ -129,7 +175,7 @@ var widgetController = angular.module("vertoControllers")
         storage.data.calling = false;
 
         $scope.call = function () {
-            storage.data.cur_call = 0;
+            storage.data.currentCall = 0;
             storage.data.onHold = false;
             if (!$scope.dialpad.number) {
                 $scope.errors.callError = "Please enter a ten digit number.";
@@ -145,8 +191,8 @@ var widgetController = angular.module("vertoControllers")
             var code = "wrtc";
             var countryCode = "1";
             verto.call(code + countryCode + $scope.dialpad.number);
-            storage.data.called_number = $scope.dialpad.number;
-            console.log(storage.data.called_number);
+            storage.data.calledNumber = $scope.dialpad.number;
+            console.log(storage.data.calledNumber);
             $scope.content.showDialer = false;
             $scope.content.showInCall = true;
         };
@@ -193,12 +239,17 @@ var widgetController = angular.module("vertoControllers")
             }, 1000);
         };
 
+        $rootScope.dtmfCall = function() {
+            ngAudio.play('src/sounds/dtmf/dtmf-star.mp3');
+        };
+
         $scope.timerRunning = false;
         $scope.startTimer = function () {
             $scope.$broadcast('timer-start');
             $scope.timerRunning = true;
         };
         $scope.stopTimer = function () {
+
             console.log("stopTimer function");
             $scope.$broadcast('timer-stop');
             $scope.timerRunning = false;
@@ -207,12 +258,46 @@ var widgetController = angular.module("vertoControllers")
         $rootScope.callActive = function (data, params) {
             verto.data.mutedMic = storage.data.mutedMic;
             storage.data.userStatus = "connected";
+            $scope.callData.startTime = new Date();
             $timeout(function () {
                 $scope.startTimer();
                 $scope.incall = true;
             });
             storage.data.calling = false;
-            storage.data.cur_call = 1;
+            storage.data.currentCall = 1;
+        };
+
+        $rootScope.answerCall = function() {
+            console.log('into anwsercall');
+            storage.data.onHold = false;
+            console.log(storage.data);
+            verto.data.call.answer({
+                useStereo: storage.data.useStereo,
+                useCamera: storage.data.selectedVideo,
+                useVideo: storage.data.useVideo,
+                useMic: storage.data.useMic,
+                callee_id_name: verto.data.name,
+                callee_id_number: verto.data.login
+            });
+            console.log('after verto anwsercall');
+            $timeout(function() {
+                $scope.content.incomingCall = false;
+                $scope.callConnected = true;
+                $scope.startTimer();
+                $scope.incall = true;
+            }, 500);
+            $scope.content.showInCall=true;
+            console.log('last anwsercall');
+        };
+
+        $scope.declineCall = function() {
+            console.log('into descline');
+            $scope.content.incomingCall = false;
+            $timeout(function() {
+                
+                verto.hangup();
+                $scope.content.showInCall=true;
+            });
         };
 
         /**
@@ -224,8 +309,10 @@ var widgetController = angular.module("vertoControllers")
                 $scope.stopTimer();
             });
             checkFunds();
-            $scope.incall = false;
+            $scope.content.incomingCall = false;
             $scope.dialpad.number = "";
+            $scope.callConnected = false;
+            $scope.content.showInCall=true;
             try {
                 $rootScope.$digest();
             } catch (e) {
@@ -240,6 +327,31 @@ var widgetController = angular.module("vertoControllers")
             storage.data.calling = true;
         });
 
+        $rootScope.$on("call.incoming", function(event, data) {
+            console.log('into incomming calls');
+            storage.data.currentCall = 0;
+            $scope.incomingDid = data;
+            console.log($scope.incomingDid);
+            $scope.$apply(function() {
+                console.log('into incomming calls timeout');
+                $scope.content.incomingCall = true;
+            });
+            storage.data.videoCall = false;
+            storage.data.mutedMic = false;
+            storage.data.mutedVideo = false;
+        });
+
     });
 
-widgetController.$inject = ['$scope', '$rootScope', '$http', '$location', '$timeout', '$q', 'verto', 'storage', 'ngAudio'];
+widgetController.$inject = [
+    '$scope',
+    '$rootScope',
+    '$http',
+    '$location',
+    '$timeout',
+    '$q',
+    'verto',
+    'storage',
+    '$state',
+    'ngAudio',
+];

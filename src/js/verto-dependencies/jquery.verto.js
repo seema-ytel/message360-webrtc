@@ -72,35 +72,35 @@
             passwd: null,
             socketUrl: null,
             tag: null,
-	    localTag: null,
+        localTag: null,
             videoParams: {},
             audioParams: {},
-	    loginParams: {},
-	    deviceParams: {onResCheck: null},
-	    userVariables: {},
+        loginParams: {},
+        deviceParams: {onResCheck: null},
+        userVariables: {},
             iceServers: false,
             ringSleep: 6000,
-	    sessid: null
+        sessid: null
         }, options);
 
-	if (verto.options.deviceParams.useCamera) {
-	    $.FSRTC.getValidRes(verto.options.deviceParams.useCamera, verto.options.deviceParams.onResCheck);
-	}
+    if (verto.options.deviceParams.useCamera) {
+        $.FSRTC.getValidRes(verto.options.deviceParams.useCamera, verto.options.deviceParams.onResCheck);
+    }
 
-	if (!verto.options.deviceParams.useMic) {
-	    verto.options.deviceParams.useMic = "any";
-	}
+    if (!verto.options.deviceParams.useMic) {
+        verto.options.deviceParams.useMic = "any";
+    }
 
-	if (!verto.options.deviceParams.useSpeak) {
-	    verto.options.deviceParams.useSpeak = "any";
-	}
+    if (!verto.options.deviceParams.useSpeak) {
+        verto.options.deviceParams.useSpeak = "any";
+    }
 
-	if (verto.options.sessid) {
-	    verto.sessid = verto.options.sessid;
-	} else {
+    if (verto.options.sessid) {
+        verto.sessid = verto.options.sessid;
+    } else {
             verto.sessid = localStorage.getItem("verto_session_uuid") || generateGUID();
-	    localStorage.setItem("verto_session_uuid", verto.sessid);
-	}
+        localStorage.setItem("verto_session_uuid", verto.sessid);
+    }
 
         verto.dialogs = {};
         verto.callbacks = callbacks || {};
@@ -110,8 +110,8 @@
             login: verto.options.login,
             passwd: verto.options.passwd,
             socketUrl: verto.options.socketUrl,
-	    loginParams: verto.options.loginParams,
-	    userVariables: verto.options.userVariables,
+        loginParams: verto.options.loginParams,
+        userVariables: verto.options.userVariables,
             sessid: verto.sessid,
             onmessage: function(e) {
                 return verto.handleMessage(e.eventData);
@@ -149,21 +149,21 @@
     $.verto.prototype.deviceParams = function(obj) {
         var verto = this;
 
-	for (var i in obj) {
+    for (var i in obj) {
             verto.options.deviceParams[i] = obj[i];
-	}
+    }
 
-	if (obj.useCamera) {
-	    $.FSRTC.getValidRes(verto.options.deviceParams.useCamera, obj ? obj.onResCheck : undefined);
-	}
+    if (obj.useCamera) {
+        $.FSRTC.getValidRes(verto.options.deviceParams.useCamera, obj ? obj.onResCheck : undefined);
+    }
     };
 
     $.verto.prototype.videoParams = function(obj) {
         var verto = this;
 
-	for (var i in obj) {
+    for (var i in obj) {
             verto.options.videoParams[i] = obj[i];
-	}
+    }
     };
 
     $.verto.prototype.iceServers = function(obj) {
@@ -172,7 +172,7 @@
     };
 
     $.verto.prototype.loginData = function(params) {
-	var verto = this;
+    var verto = this;
         verto.options.login = params.login;
         verto.options.passwd = params.passwd;
         verto.rpcClient.loginData(params);
@@ -478,12 +478,12 @@
 
         if (data.params.callID) {
             var dialog = verto.dialogs[data.params.callID];
-	    
-	    if (data.method === "verto.attach" && dialog) {
-		delete dialog.verto.dialogs[dialog.callID];
-		dialog.rtc.stop();
-		dialog = null;
-	    }
+        
+        if (data.method === "verto.attach" && dialog) {
+        delete dialog.verto.dialogs[dialog.callID];
+        dialog.rtc.stop();
+        dialog = null;
+        }
 
             if (dialog) {
 
@@ -550,8 +550,8 @@
             switch (data.method) {
             case 'verto.punt':
                 verto.purge();
-		verto.logout();
-		break;
+        verto.logout();
+        break;
             case 'verto.event':
                 var list = null;
                 var key = null;
@@ -1080,25 +1080,25 @@
             console.error("Error: ", obj, args);
         };
 
-	/* back compat so jsonstatus can always be enabled */
-	function genRow(data) {
-	    if (typeof(data[4]) === "string" && data[4].indexOf("{") > -1) {
-		var tmp = $.parseJSON(data[4]);
-		data[4] = tmp.oldStatus;
-		data[5] = null;
-	    }
-	    return data;
-	}
+    /* back compat so jsonstatus can always be enabled */
+    function genRow(data) {
+        if (typeof(data[4]) === "string" && data[4].indexOf("{") > -1) {
+        var tmp = $.parseJSON(data[4]);
+        data[4] = tmp.oldStatus;
+        data[5] = null;
+        }
+        return data;
+    }
 
-	function genArray(obj) {
-	    var data = obj.asArray();
+    function genArray(obj) {
+        var data = obj.asArray();
 
             for (var i in data) {
-		data[i] = genRow(data[i]);
-	    }
+        data[i] = genRow(data[i]);
+        }
 
-	    return data;
-	}
+        return data;
+    }
 
 
         la.onChange = function(obj, args) {
@@ -1317,11 +1317,11 @@
             if (!this.params.hasVid) {
                 throw 'Conference has no video';
             }
-	    if (canvasID) {
-		this.modCommand("vid-layout", null, [layout, canvasID]);
-	    } else {
-		this.modCommand("vid-layout", null, layout);
-	    }
+        if (canvasID) {
+        this.modCommand("vid-layout", null, [layout, canvasID]);
+        } else {
+        this.modCommand("vid-layout", null, layout);
+        }
         };
 
         $.verto.conf.prototype.kick = function(memberID) {
@@ -1413,8 +1413,8 @@
 
         confMan.verto = verto;
         confMan.serno = CONFMAN_SERNO++;
-	confMan.canvasCount = confMan.params.laData.canvasCount;
-	
+    confMan.canvasCount = confMan.params.laData.canvasCount;
+    
         function genMainMod(jq) {
             var play_id = "play_" + confMan.serno;
             var stop_id = "stop_" + confMan.serno;
@@ -1424,48 +1424,48 @@
             var div_id = "confman_" + confMan.serno;
 
             var html =  "<div id='" + div_id + "'><br>" +
-		"<button class='ctlbtn' id='" + play_id + "'>Play</button>" +
-		"<button class='ctlbtn' id='" + stop_id + "'>Stop</button>" +
-		"<button class='ctlbtn' id='" + recording_id + "'>Record</button>" +
-		"<button class='ctlbtn' id='" + rec_stop_id + "'>Record Stop</button>" +
-		(confMan.params.hasVid ? "<button class='ctlbtn' id='" + snapshot_id + "'>PNG Snapshot</button>" : "") +
-		"<br><br></div>";
+        "<button class='ctlbtn' id='" + play_id + "'>Play</button>" +
+        "<button class='ctlbtn' id='" + stop_id + "'>Stop</button>" +
+        "<button class='ctlbtn' id='" + recording_id + "'>Record</button>" +
+        "<button class='ctlbtn' id='" + rec_stop_id + "'>Record Stop</button>" +
+        (confMan.params.hasVid ? "<button class='ctlbtn' id='" + snapshot_id + "'>PNG Snapshot</button>" : "") +
+        "<br><br></div>";
 
             jq.html(html);
 
-	    $.verto.modfuncs.change_video_layout = function(id, canvas_id) {	    
-		var val = $("#" + id + " option:selected").text();
-		if (val !== "none") {
+        $.verto.modfuncs.change_video_layout = function(id, canvas_id) {        
+        var val = $("#" + id + " option:selected").text();
+        if (val !== "none") {
                     confMan.modCommand("vid-layout", null, [val, canvas_id]);
-		}
-	    };
+        }
+        };
 
-	    if (confMan.params.hasVid) {
-		for (var j = 0; j < confMan.canvasCount; j++) {
-		    var vlayout_id = "confman_vid_layout_" + j + "_" + confMan.serno;
-		    var vlselect_id = "confman_vl_select_" + j + "_" + confMan.serno;
-		
+        if (confMan.params.hasVid) {
+        for (var j = 0; j < confMan.canvasCount; j++) {
+            var vlayout_id = "confman_vid_layout_" + j + "_" + confMan.serno;
+            var vlselect_id = "confman_vl_select_" + j + "_" + confMan.serno;
+        
 
-		    var vlhtml =  "<div id='" + vlayout_id + "'><br>" +
-			"<b>Video Layout Canvas " + (j+1) + 
-			"</b> <select onChange='$.verto.modfuncs.change_video_layout(\"" + vlayout_id + "\", \"" + (j+1) + "\")' id='" + vlselect_id + "'></select> " +
-			"<br><br></div>";
-		    jq.append(vlhtml);
-		}
+            var vlhtml =  "<div id='" + vlayout_id + "'><br>" +
+            "<b>Video Layout Canvas " + (j+1) + 
+            "</b> <select onChange='$.verto.modfuncs.change_video_layout(\"" + vlayout_id + "\", \"" + (j+1) + "\")' id='" + vlselect_id + "'></select> " +
+            "<br><br></div>";
+            jq.append(vlhtml);
+        }
 
-		$("#" + snapshot_id).click(function() {
+        $("#" + snapshot_id).click(function() {
                     var file = prompt("Please enter file name", "");
-		    if (file) {
-			confMan.modCommand("vid-write-png", null, file);
-		    }
-		});
-	    }
+            if (file) {
+            confMan.modCommand("vid-write-png", null, file);
+            }
+        });
+        }
 
             $("#" + play_id).click(function() {
                 var file = prompt("Please enter file name", "");
-		if (file) {
+        if (file) {
                     confMan.modCommand("play", null, file);
-		}
+        }
             });
 
             $("#" + stop_id).click(function() {
@@ -1474,9 +1474,9 @@
 
             $("#" + recording_id).click(function() {
                 var file = prompt("Please enter file name", "");
-		if (file) {
+        if (file) {
                     confMan.modCommand("recording", null, ["start", file]);
-		}
+        }
             });
 
             $("#" + rec_stop_id).click(function() {
@@ -1499,7 +1499,7 @@
             var layer_set_id = "layer_set_" + x;
             var layer_next_id = "layer_next_" + x;
             var layer_prev_id = "layer_prev_" + x;
-	    
+        
             var tmute_id = "tmute_" + x;
             var tvmute_id = "tvmute_" + x;
             var vbanner_id = "vbanner_" + x;
@@ -1511,11 +1511,11 @@
             var volup_id = "vol_in_up" + x;
             var voldn_id = "vol_in_dn" + x;
             var transfer_id = "transfer" + x;
-	    
+        
 
             var html = "<div id='" + box_id + "'>";
 
-	    html += "<b>General Controls</b><hr noshade>";
+        html += "<b>General Controls</b><hr noshade>";
 
             html += "<button class='ctlbtn' id='" + kick_id + "'>Kick</button>" +
                 "<button class='ctlbtn' id='" + tmute_id + "'>Mute</button>" +
@@ -1524,9 +1524,9 @@
                 "<button class='ctlbtn' id='" + voldn_id + "'>Vol -</button>" +
                 "<button class='ctlbtn' id='" + volup_id + "'>Vol +</button>" +
                 "<button class='ctlbtn' id='" + transfer_id + "'>Transfer</button>";
-		
-	    if (confMan.params.hasVid) {
-		html += "<br><br><b>Video Controls</b><hr noshade>";
+        
+        if (confMan.params.hasVid) {
+        html += "<br><br><b>Video Controls</b><hr noshade>";
 
 
                 html += "<button class='ctlbtn' id='" + tvmute_id + "'>VMute</button>" +
@@ -1534,20 +1534,20 @@
                     "<button class='ctlbtn' id='" + tvfloor_id + "'>Vid Floor</button>" +
                     "<button class='ctlbtn' id='" + vbanner_id + "'>Banner</button>";
 
-		if (confMan.canvasCount > 1) {
+        if (confMan.canvasCount > 1) {
                     html += "<br><br><b>Canvas Controls</b><hr noshade>" +
-			"<button class='ctlbtn' id='" + canvas_in_set_id + "'>Set Input Canvas</button>" +
-			"<button class='ctlbtn' id='" + canvas_in_prev_id + "'>Prev Input Canvas</button>" +
-			"<button class='ctlbtn' id='" + canvas_in_next_id + "'>Next Input Canvas</button>" +
-			
-		    "<br>" +
-			
-		    "<button class='ctlbtn' id='" + canvas_out_set_id + "'>Set Watching Canvas</button>" +
-			"<button class='ctlbtn' id='" + canvas_out_prev_id + "'>Prev Watching Canvas</button>" +
-			"<button class='ctlbtn' id='" + canvas_out_next_id + "'>Next Watching Canvas</button>";
-		}
-		
-		html += "<br>" +
+            "<button class='ctlbtn' id='" + canvas_in_set_id + "'>Set Input Canvas</button>" +
+            "<button class='ctlbtn' id='" + canvas_in_prev_id + "'>Prev Input Canvas</button>" +
+            "<button class='ctlbtn' id='" + canvas_in_next_id + "'>Next Input Canvas</button>" +
+            
+            "<br>" +
+            
+            "<button class='ctlbtn' id='" + canvas_out_set_id + "'>Set Watching Canvas</button>" +
+            "<button class='ctlbtn' id='" + canvas_out_prev_id + "'>Prev Watching Canvas</button>" +
+            "<button class='ctlbtn' id='" + canvas_out_next_id + "'>Next Watching Canvas</button>";
+        }
+        
+        html += "<br>" +
 
                 "<button class='ctlbtn' id='" + layer_set_id + "'>Set Layer</button>" +
                     "<button class='ctlbtn' id='" + layer_prev_id + "'>Prev Layer</button>" +
@@ -1577,9 +1577,9 @@
 
             $("#" + transfer_id).click(function() {
                 var xten = prompt("Enter Extension");
-		if (xten) {
+        if (xten) {
                     confMan.modCommand("transfer", x, xten);
-		}
+        }
             });
 
             $("#" + kick_id).click(function() {
@@ -1589,9 +1589,9 @@
 
             $("#" + layer_set_id).click(function() {
                 var cid = prompt("Please enter layer ID", "");
-		if (cid) {
+        if (cid) {
                     confMan.modCommand("vid-layer", x, cid);
-		}
+        }
             });
 
             $("#" + layer_next_id).click(function() {
@@ -1603,16 +1603,16 @@
 
             $("#" + canvas_in_set_id).click(function() {
                 var cid = prompt("Please enter canvas ID", "");
-		if (cid) {
+        if (cid) {
                     confMan.modCommand("vid-canvas", x, cid);
-		}
+        }
             });
 
             $("#" + canvas_out_set_id).click(function() {
                 var cid = prompt("Please enter canvas ID", "");
-		if (cid) {
+        if (cid) {
                     confMan.modCommand("vid-watching-canvas", x, cid);
-		}
+        }
             });
 
             $("#" + canvas_in_next_id).click(function() {
@@ -1629,28 +1629,28 @@
             $("#" + canvas_out_prev_id).click(function() {
                 confMan.modCommand("vid-watching-canvas", x, "prev");
             });
-	    
+        
             $("#" + tmute_id).click(function() {
                 confMan.modCommand("tmute", x);
             });
 
-	    if (confMan.params.hasVid) {
-		$("#" + tvmute_id).click(function() {
+        if (confMan.params.hasVid) {
+        $("#" + tvmute_id).click(function() {
                     confMan.modCommand("tvmute", x);
-		});
-		$("#" + tvpresenter_id).click(function() {
+        });
+        $("#" + tvpresenter_id).click(function() {
                     confMan.modCommand("vid-res-id", x, "presenter");
-		});
-		$("#" + tvfloor_id).click(function() {
+        });
+        $("#" + tvfloor_id).click(function() {
                     confMan.modCommand("vid-floor", x, "force");
-		});
-		$("#" + vbanner_id).click(function() {
+        });
+        $("#" + vbanner_id).click(function() {
                     var text = prompt("Please enter text", "");
-		    if (text) {
-			confMan.modCommand("vid-banner", x, escape(text));
-		    }
-		});
-	    }
+            if (text) {
+            confMan.modCommand("vid-banner", x, escape(text));
+            }
+        });
+        }
 
             $("#" + gainup_id).click(function() {
                 confMan.modCommand("volume_in", x, "up");
@@ -1676,13 +1676,13 @@
 
         //$(".jsDataTable").width(confMan.params.hasVid ? "900px" : "800px");
 
-	verto.subscribe(confMan.params.laData.chatChannel, {
-	    handler: function(v, e) {
-		if (typeof(confMan.params.chatCallback) === "function") {
-		    confMan.params.chatCallback(v,e);
-		}
-	    }
-	});
+    verto.subscribe(confMan.params.laData.chatChannel, {
+        handler: function(v, e) {
+        if (typeof(confMan.params.chatCallback) === "function") {
+            confMan.params.chatCallback(v,e);
+        }
+        }
+    });
 
         if (confMan.params.laData.role === "moderator") {
             atitle = "Action";
@@ -1702,68 +1702,68 @@
                         confMan.params.onBroadcast(verto, confMan, e.data);
                     }
 
-		    if (e.data["conf-command"] === "list-videoLayouts") {
-			for (var j = 0; j < confMan.canvasCount; j++) {
-			    var vlselect_id = "#confman_vl_select_" + j + "_" + confMan.serno;
-			    var vlayout_id = "#confman_vid_layout_" + j + "_" + confMan.serno;
-			    
-			    var x = 0;
-			    var options;
-			    
-			    $(vlselect_id).selectmenu({});
-			    $(vlselect_id).selectmenu("enable");
-			    $(vlselect_id).empty();
-			    
-			    $(vlselect_id).append(new Option("Choose a Layout", "none"));
+            if (e.data["conf-command"] === "list-videoLayouts") {
+            for (var j = 0; j < confMan.canvasCount; j++) {
+                var vlselect_id = "#confman_vl_select_" + j + "_" + confMan.serno;
+                var vlayout_id = "#confman_vid_layout_" + j + "_" + confMan.serno;
+                
+                var x = 0;
+                var options;
+                
+                $(vlselect_id).selectmenu({});
+                $(vlselect_id).selectmenu("enable");
+                $(vlselect_id).empty();
+                
+                $(vlselect_id).append(new Option("Choose a Layout", "none"));
 
-			    if (e.data.responseData) {
-				var rdata = [];
+                if (e.data.responseData) {
+                var rdata = [];
 
-				for (var i in e.data.responseData) {
-				    rdata.push(e.data.responseData[i].name);
-				}
-				
-				options = rdata.sort(function(a, b) {
-				    var ga = a.substring(0, 6) == "group:" ? true : false;
-				    var gb = b.substring(0, 6) == "group:" ? true : false;
-				    
-				    if ((ga || gb) && ga != gb) {
-					return ga ? -1 : 1;
-				    }
-				    
-				    return ( ( a == b ) ? 0 : ( ( a > b ) ? 1 : -1 ) );
-				});
+                for (var i in e.data.responseData) {
+                    rdata.push(e.data.responseData[i].name);
+                }
+                
+                options = rdata.sort(function(a, b) {
+                    var ga = a.substring(0, 6) == "group:" ? true : false;
+                    var gb = b.substring(0, 6) == "group:" ? true : false;
+                    
+                    if ((ga || gb) && ga != gb) {
+                    return ga ? -1 : 1;
+                    }
+                    
+                    return ( ( a == b ) ? 0 : ( ( a > b ) ? 1 : -1 ) );
+                });
 
-				for (var i in options) {
-				    $(vlselect_id).append(new Option(options[i], options[i]));
-				    x++;
-				}
-			    }
+                for (var i in options) {
+                    $(vlselect_id).append(new Option(options[i], options[i]));
+                    x++;
+                }
+                }
 
-			    if (x) {
-				$(vlselect_id).selectmenu('refresh', true);
-			    } else {
-				$(vlayout_id).hide();
-			    }
-			}
-		    } else {
+                if (x) {
+                $(vlselect_id).selectmenu('refresh', true);
+                } else {
+                $(vlayout_id).hide();
+                }
+            }
+            } else {
 
-			if (!confMan.destroyed && confMan.params.displayID) {
+            if (!confMan.destroyed && confMan.params.displayID) {
                             $(confMan.params.displayID).html(e.data.response + "<br><br>");
                             if (confMan.lastTimeout) {
-				clearTimeout(confMan.lastTimeout);
-				confMan.lastTimeout = 0;
+                clearTimeout(confMan.lastTimeout);
+                confMan.lastTimeout = 0;
                             }
                             confMan.lastTimeout = setTimeout(function() { $(confMan.params.displayID).html(confMan.destroyed ? "" : "Moderator Controls Ready<br><br>");}, 4000);
-			}
-		    }
+            }
+            }
                 }
             });
 
 
-	    if (confMan.params.hasVid) {
-		confMan.modCommand("list-videoLayouts", null, null);
-	    }
+        if (confMan.params.hasVid) {
+        confMan.modCommand("list-videoLayouts", null, null);
+        }
         }
 
         var row_callback = null;
@@ -1801,11 +1801,11 @@
                 },
                 {
                     "sTitle": "Number",
-		    "sWidth": "250"
+            "sWidth": "250"
                 },
                 {
                     "sTitle": "Name",
-		    "sWidth": "250"
+            "sWidth": "250"
                 },
                 {
                     "sTitle": "Codec",
@@ -1844,12 +1844,12 @@
         confMan.verto.rpcClient.call("verto.broadcast", {
             "eventChannel": confMan.params.laData.modChannel,
             "data": {
-		"application": "conf-control",
-		"command": cmd,
-		"id": id,
-		"value": value
+        "application": "conf-control",
+        "command": cmd,
+        "id": id,
+        "value": value
             }
-	});
+    });
     };
 
     $.verto.confMan.prototype.sendChat = function(message, type) {
@@ -1857,11 +1857,11 @@
         confMan.verto.rpcClient.call("verto.broadcast", {
             "eventChannel": confMan.params.laData.chatChannel,
             "data": {
-		"action": "send",
-		"message": message,
-		"type": type
+        "action": "send",
+        "message": message,
+        "type": type
             }
-	});
+    });
     };
 
 
@@ -1898,16 +1898,16 @@
         dialog.params = $.extend({
             useVideo: verto.options.useVideo,
             useStereo: verto.options.useStereo,
-	    screenShare: false,
-	    useCamera: verto.options.deviceParams.useCamera,
-	    useMic: verto.options.deviceParams.useMic,
-	    useSpeak: verto.options.deviceParams.useSpeak,
+        screenShare: false,
+        useCamera: verto.options.deviceParams.useCamera,
+        useMic: verto.options.deviceParams.useMic,
+        useSpeak: verto.options.deviceParams.useSpeak,
             tag: tag,
             localTag: verto.options.localTag,
             login: verto.options.login,
-	    videoParams: verto.options.videoParams
+        videoParams: verto.options.videoParams
         }, params);
-	
+    
         dialog.verto = verto;
         dialog.direction = direction;
         dialog.lastState = null;
@@ -1915,17 +1915,17 @@
         dialog.callbacks = verto.callbacks;
         dialog.answered = false;
         dialog.attach = params.attach || false;
-	dialog.screenShare = params.screenShare || false;
-	dialog.useCamera = dialog.params.useCamera;
-	dialog.useMic = dialog.params.useMic;
-	dialog.useSpeak = dialog.params.useSpeak;
-	
+    dialog.screenShare = params.screenShare || false;
+    dialog.useCamera = dialog.params.useCamera;
+    dialog.useMic = dialog.params.useMic;
+    dialog.useSpeak = dialog.params.useSpeak;
+    
         if (dialog.params.callID) {
             dialog.callID = dialog.params.callID;
         } else {
             dialog.callID = dialog.params.callID = generateGUID();
         }
-	
+    
         if (dialog.params.tag) {
             dialog.audioStream = document.getElementById(dialog.params.tag);
 
@@ -1935,8 +1935,8 @@
         } //else conjure one TBD
 
         if (dialog.params.localTag) {
-	    dialog.localVideo = document.getElementById(dialog.params.localTag);
-	}
+        dialog.localVideo = document.getElementById(dialog.params.localTag);
+    }
 
         dialog.verto.dialogs[dialog.callID] = dialog;
 
@@ -1974,24 +1974,24 @@
         RTCcallbacks.onICESDP = function(rtc) {
             console.log("RECV " + rtc.type + " SDP", rtc.mediaData.SDP);
 
-	    if (dialog.state == $.verto.enum.state.requesting || dialog.state == $.verto.enum.state.answering || dialog.state == $.verto.enum.state.active) {
-		location.reload();
-		return;
-	    }
+        if (dialog.state == $.verto.enum.state.requesting || dialog.state == $.verto.enum.state.answering || dialog.state == $.verto.enum.state.active) {
+        location.reload();
+        return;
+        }
 
             if (rtc.type == "offer") {
-		if (dialog.state == $.verto.enum.state.active) {
+        if (dialog.state == $.verto.enum.state.active) {
                     dialog.setState($.verto.enum.state.requesting);
-		    dialog.sendMethod("verto.attach", {
-			sdp: rtc.mediaData.SDP
+            dialog.sendMethod("verto.attach", {
+            sdp: rtc.mediaData.SDP
                     });
-		} else {
+        } else {
                     dialog.setState($.verto.enum.state.requesting);
-		    
+            
                     dialog.sendMethod("verto.invite", {
-			sdp: rtc.mediaData.SDP
+            sdp: rtc.mediaData.SDP
                     });
-		}
+        }
             } else { //answer
                 dialog.setState($.verto.enum.state.answering);
 
@@ -2005,40 +2005,32 @@
             //console.log("cand", rtc.mediaData.candidate);
             if (rtc.type == "offer") {
                 console.log("offer", rtc.mediaData.candidate);
-
+                return;
             }
         };
 
         RTCcallbacks.onStream = function(rtc, stream) {
-            if (dialog.verto.options.permissionCallback &&
-                typeof dialog.verto.options.permissionCallback.onGranted === 'function'){
-                dialog.verto.options.permissionCallback.onGranted();
-            }
             console.log("stream started");
         };
 
         RTCcallbacks.onError = function(e) {
-            if (dialog.verto.options.permissionCallback &&
-                typeof dialog.verto.options.permissionCallback.onDenied === 'function'){
-                dialog.verto.options.permissionCallback.onDenied();
-            }
             console.error("ERROR:", e);
             dialog.hangup({cause: "Device or Permission Error"});
         };
 
         dialog.rtc = new $.FSRTC({
             callbacks: RTCcallbacks,
-	    localVideo: dialog.screenShare ? null : dialog.localVideo,
+        localVideo: dialog.screenShare ? null : dialog.localVideo,
             useVideo: dialog.params.useVideo ? dialog.videoStream : null,
             useAudio: dialog.audioStream,
             useStereo: dialog.params.useStereo,
             videoParams: dialog.params.videoParams,
             audioParams: verto.options.audioParams,
             iceServers: verto.options.iceServers,
-	    screenShare: dialog.screenShare,
-	    useCamera: dialog.useCamera,
-	    useMic: dialog.useMic,
-	    useSpeak: dialog.useSpeak
+        screenShare: dialog.screenShare,
+        useCamera: dialog.useCamera,
+        useMic: dialog.useMic,
+        useSpeak: dialog.useSpeak
         });
 
         dialog.rtc.verto = dialog.verto;
@@ -2094,49 +2086,49 @@
 
     // Attach audio output device to video element using device/sink ID.                                                                                           
     function find_name(id) {
-	for (var i in $.verto.audioOutDevices) {
-	    var source = $.verto.audioOutDevices[i];
-	    if (source.id === id) {
-		return(source.label);
-	    }
-	}
+    for (var i in $.verto.audioOutDevices) {
+        var source = $.verto.audioOutDevices[i];
+        if (source.id === id) {
+        return(source.label);
+        }
+    }
 
-	return id;
+    return id;
     }
 
     $.verto.dialog.prototype.setAudioPlaybackDevice = function(sinkId, callback, arg) {
-	var dialog = this;
-	var element = dialog.audioStream;
+    var dialog = this;
+    var element = dialog.audioStream;
 
-	if (typeof element.sinkId !== 'undefined') {
-	    var devname = find_name(sinkId);
-	    console.info("Dialog: " + dialog.callID + " Setting speaker:", element, devname);
+    if (typeof element.sinkId !== 'undefined') {
+        var devname = find_name(sinkId);
+        console.info("Dialog: " + dialog.callID + " Setting speaker:", element, devname);
 
-	    element.setSinkId(sinkId)
-		.then(function() {
-		    console.log("Dialog: " + dialog.callID + ' Success, audio output device attached: ' + sinkId);
-		    if (callback) {
-			callback(true, devname, arg);
-		    }
-		})
-		.catch(function(error) {
-		    var errorMessage = error;
-		    if (error.name === 'SecurityError') {
-			errorMessage = "Dialog: " + dialog.callID + ' You need to use HTTPS for selecting audio output ' +
-			    'device: ' + error;
-		    }
-		    if (callback) {
-			callback(false, null, arg);
-		    }
-		    console.error(errorMessage);
-		});
-	} else {
-	    console.warn("Dialog: " + dialog.callID + ' Browser does not support output device selection.');
-	    if (callback) {
-		callback(false, null, arg);
-	    }
-	}
-    };
+        element.setSinkId(sinkId)
+        .then(function() {
+            console.log("Dialog: " + dialog.callID + ' Success, audio output device attached: ' + sinkId);
+            if (callback) {
+            callback(true, devname, arg);
+            }
+        })
+        .catch(function(error) {
+            var errorMessage = error;
+            if (error.name === 'SecurityError') {
+            errorMessage = "Dialog: " + dialog.callID + ' You need to use HTTPS for selecting audio output ' +
+                'device: ' + error;
+            }
+            if (callback) {
+            callback(false, null, arg);
+            }
+            console.error(errorMessage);
+        });
+    } else {
+        console.warn("Dialog: " + dialog.callID + ' Browser does not support output device selection.');
+        if (callback) {
+        callback(false, null, arg);
+        }
+    }
+    }
 
     $.verto.dialog.prototype.setState = function(state) {
         var dialog = this;
@@ -2173,16 +2165,16 @@
         case $.verto.enum.state.early:
         case $.verto.enum.state.active:
 
-	    var speaker = dialog.useSpeak;
-	    console.info("Using Speaker: ", speaker);
+        var speaker = dialog.useSpeak;
+        console.info("Using Speaker: ", speaker);
 
-	    if (speaker && speaker !== "any" && speaker !== "none") {
-		setTimeout(function() {
-		    dialog.setAudioPlaybackDevice(speaker);
-		}, 500);
-	    }
+        if (speaker && speaker !== "any" && speaker !== "none") {
+        setTimeout(function() {
+            dialog.setAudioPlaybackDevice(speaker);
+        }, 500);
+        }
 
-	    break;
+        break;
 
         case $.verto.enum.state.trying:
             setTimeout(function() {
@@ -2209,11 +2201,11 @@
             }
 
             delete dialog.verto.dialogs[dialog.callID];
-	    if (dialog.params.screenShare) {
-		dialog.rtc.stopPeer();
-	    } else {
-		dialog.rtc.stop();
-	    }
+        if (dialog.params.screenShare) {
+        dialog.rtc.stopPeer();
+        } else {
+        dialog.rtc.stop();
+        }
             break;
         }
 
@@ -2275,11 +2267,11 @@
 
         if (params) {
             if (params.causeCode) {
-		dialog.causeCode = params.causeCode;
+        dialog.causeCode = params.causeCode;
             }
 
             if (params.cause) {
-		dialog.cause = params.cause;
+        dialog.cause = params.cause;
             }
         }
 
@@ -2293,15 +2285,21 @@
     $.verto.dialog.prototype.stopRinging = function() {
         var dialog = this;
         if (dialog.verto.ringer) {
-            dialog.verto.ringer.stop();
+            var x = $('#inboundring')[0]; 
+            $('#inboundring').attr("src", "");
+            var ring = x.pause();
+            x.currentTime = 0;
         }
     };
 
     $.verto.dialog.prototype.indicateRing = function() {
-        var dialog = this;
+         var dialog = this;
 
         if (dialog.verto.ringer) {
-            dialog.verto.ringer.attr("src", dialog.verto.options.ringFile)[0].play();
+            var x = $('#inboundring')[0]; 
+            x.currentTime = 0;
+            $('#inboundring').attr("src", dialog.verto.options.ringFile);
+            var ring = x.play();
 
             setTimeout(function() {
                 dialog.stopRinging();
@@ -2312,6 +2310,7 @@
             dialog.verto.options.ringSleep);
         }
     };
+
 
     $.verto.dialog.prototype.ring = function() {
         var dialog = this;
@@ -2336,23 +2335,23 @@
     };
 
     $.verto.dialog.prototype.setMute = function(what) {
-	var dialog = this;
-	return dialog.rtc.setMute(what);
+    var dialog = this;
+    return dialog.rtc.setMute(what);
     };
 
     $.verto.dialog.prototype.getMute = function() {
-	var dialog = this; 
-	return dialog.rtc.getMute();
+    var dialog = this; 
+    return dialog.rtc.getMute();
     };
 
     $.verto.dialog.prototype.setVideoMute = function(what) {
-	var dialog = this;
-	return dialog.rtc.setVideoMute(what);
+    var dialog = this;
+    return dialog.rtc.setVideoMute(what);
     };
 
     $.verto.dialog.prototype.getVideoMute = function() {
-	var dialog = this; 
-	return dialog.rtc.getVideoMute();
+    var dialog = this; 
+    return dialog.rtc.getVideoMute();
     };
 
     $.verto.dialog.prototype.useStereo = function(on) {
@@ -2438,34 +2437,34 @@
 
     $.verto.dialog.prototype.answer = function(params) {
         var dialog = this;
-	
+    
         if (!dialog.answered) {
-	    if (!params) {
-		params = {};
-	    }
+        if (!params) {
+        params = {};
+        }
 
-	    params.sdp = dialog.params.sdp;
+        params.sdp = dialog.params.sdp;
 
             if (params) {
                 if (params.useVideo) {
                     dialog.useVideo(true);
                 }
-		dialog.params.callee_id_name = params.callee_id_name;
-		dialog.params.callee_id_number = params.callee_id_number;
+        dialog.params.callee_id_name = params.callee_id_name;
+        dialog.params.callee_id_number = params.callee_id_number;
 
-		if (params.useCamera) {
-		    dialog.useCamera = params.useCamera;
-		}
+        if (params.useCamera) {
+            dialog.useCamera = params.useCamera;
+        }
 
-		if (params.useMic) {
-		    dialog.useMic = params.useMic;
-		}
+        if (params.useMic) {
+            dialog.useMic = params.useMic;
+        }
 
-		if (params.useSpeak) {
-		    dialog.useSpeak = params.useSpeak;
-		}
+        if (params.useSpeak) {
+            dialog.useSpeak = params.useSpeak;
+        }
             }
-	    
+        
             dialog.rtc.createAnswer(params);
             dialog.answered = true;
         }
@@ -2578,12 +2577,12 @@
             ringing: 1,
             destroy: 1,
             answering: 1,
-	    hangup: 1
+        hangup: 1
         },
         requesting: {
             trying: 1,
             hangup: 1,
-	    active: 1
+        active: 1
         },
         recovering: {
             answering: 1,
@@ -2636,9 +2635,9 @@
     $.verto.unloadJobs = [];
 
     $(window).bind('beforeunload', function() {
-	for (var f in $.verto.unloadJobs) {
-	    $.verto.unloadJobs[f]();
-	}
+    for (var f in $.verto.unloadJobs) {
+        $.verto.unloadJobs[f]();
+    }
 
         for (var i in $.verto.saved) {
             var verto = $.verto.saved[i];
@@ -2656,100 +2655,100 @@
     $.verto.audioOutDevices = [];
 
     var checkDevices = function(runtime) {
-	console.info("enumerating devices");
-	var aud_in = [], aud_out = [], vid = [];	
+    console.info("enumerating devices");
+    var aud_in = [], aud_out = [], vid = [];    
 
-	if ((!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) && MediaStreamTrack.getSources) {
-	    MediaStreamTrack.getSources(function (media_sources) {
-		for (var i = 0; i < media_sources.length; i++) {
+    if ((!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) && MediaStreamTrack.getSources) {
+        MediaStreamTrack.getSources(function (media_sources) {
+        for (var i = 0; i < media_sources.length; i++) {
 
-		    if (media_sources[i].kind == 'video') {
-			vid.push(media_sources[i]);
-		    } else {
-			aud_in.push(media_sources[i]);
-		    }
-		}
-		
-		$.verto.videoDevices = vid;
-		$.verto.audioInDevices = aud_in;
-		
-		console.info("Audio Devices", $.verto.audioInDevices);
-		console.info("Video Devices", $.verto.videoDevices);
-		runtime(true);
-	    });
-	} else {
-	    /* of course it's a totally different API CALL with different element names for the same exact thing */
-	    
-	    if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
-		console.log("enumerateDevices() not supported.");
-		return;
-	    }
+            if (media_sources[i].kind == 'video') {
+            vid.push(media_sources[i]);
+            } else {
+            aud_in.push(media_sources[i]);
+            }
+        }
+        
+        $.verto.videoDevices = vid;
+        $.verto.audioInDevices = aud_in;
+        
+        console.info("Audio Devices", $.verto.audioInDevices);
+        console.info("Video Devices", $.verto.videoDevices);
+        runtime(true);
+        });
+    } else {
+        /* of course it's a totally different API CALL with different element names for the same exact thing */
+        
+        if (!navigator.mediaDevices || !navigator.mediaDevices.enumerateDevices) {
+        console.log("enumerateDevices() not supported.");
+        return;
+        }
 
-	    // List cameras and microphones.
+        // List cameras and microphones.
 
-	    navigator.mediaDevices.enumerateDevices()
-		.then(function(devices) {
-		    devices.forEach(function(device) {
-			console.log(device);
+        navigator.mediaDevices.enumerateDevices()
+        .then(function(devices) {
+            devices.forEach(function(device) {
+            console.log(device);
 
-			console.log(device.kind + ": " + device.label +
-				    " id = " + device.deviceId);
-			
-			if (device.kind === "videoinput") {
-			    vid.push({id: device.deviceId, kind: "video", label: device.label});
-			} else if (device.kind === "audioinput") {
-			    aud_in.push({id: device.deviceId, kind: "audio_in", label: device.label});
-			} else if (device.kind === "audiooutput") {
-			    aud_out.push({id: device.deviceId, kind: "audio_out", label: device.label});
-			}
-		    });
-		    
+            console.log(device.kind + ": " + device.label +
+                    " id = " + device.deviceId);
+            
+            if (device.kind === "videoinput") {
+                vid.push({id: device.deviceId, kind: "video", label: device.label});
+            } else if (device.kind === "audioinput") {
+                aud_in.push({id: device.deviceId, kind: "audio_in", label: device.label});
+            } else if (device.kind === "audiooutput") {
+                aud_out.push({id: device.deviceId, kind: "audio_out", label: device.label});
+            }
+            });
+            
 
-		    $.verto.videoDevices = vid;
-		    $.verto.audioInDevices = aud_in;
-		    $.verto.audioOutDevices = aud_out;
-		    
-		    console.info("Audio IN Devices", $.verto.audioInDevices);
-		    console.info("Audio Out Devices", $.verto.audioOutDevices);
-		    console.info("Video Devices", $.verto.videoDevices);
-		    runtime(true);
-		    
-		})
-		.catch(function(err) {
-		    console.log(" Device Enumeration ERROR: " + err.name + ": " + err.message);
-		    runtime(false);
-		});
-	}
+            $.verto.videoDevices = vid;
+            $.verto.audioInDevices = aud_in;
+            $.verto.audioOutDevices = aud_out;
+            
+            console.info("Audio IN Devices", $.verto.audioInDevices);
+            console.info("Audio Out Devices", $.verto.audioOutDevices);
+            console.info("Video Devices", $.verto.videoDevices);
+            runtime(true);
+            
+        })
+        .catch(function(err) {
+            console.log(" Device Enumeration ERROR: " + err.name + ": " + err.message);
+            runtime(false);
+        });
+    }
 
     };
 
     $.verto.refreshDevices = function(runtime) {
-	checkDevices(runtime);
-    };
+    checkDevices(runtime);
+    }
 
     $.verto.init = function(obj, runtime) {
-	if (!obj) {
-	    obj = {};
-	}
+    if (!obj) {
+        obj = {};
+    }
 
-	if (!obj.skipPermCheck && !obj.skipDeviceCheck) {
-	    $.FSRTC.checkPerms(function(status) {
-		checkDevices(runtime);
-	    }, true, true);
-	} else if (obj.skipPermCheck && !obj.skipDeviceCheck) {
-	    checkDevices(runtime);
-	} else if (!obj.skipPermCheck && obj.skipDeviceCheck) {
-	    $.FSRTC.checkPerms(function(status) {
-		runtime(status);
-	    }, true, true);
-	} else {
-	    runtime(null);
-	}
+    if (!obj.skipPermCheck && !obj.skipDeviceCheck) {
+        $.FSRTC.checkPerms(function(status) {
+        checkDevices(runtime);
+        }, true, true);
+    } else if (obj.skipPermCheck && !obj.skipDeviceCheck) {
+        checkDevices(runtime);
+    } else if (!obj.skipPermCheck && obj.skipDeviceCheck) {
+        $.FSRTC.checkPerms(function(status) {
+        runtime(status);
+        }, true, true);
+    } else {
+        runtime(null);
+    }
 
-    };
+    }
 
     $.verto.genUUID = function () {
-	return generateGUID();
+    return generateGUID();
     }
 
 
